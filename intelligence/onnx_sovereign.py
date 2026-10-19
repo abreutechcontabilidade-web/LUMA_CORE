@@ -1,5 +1,6 @@
 
 import difflib
+import re
 
 def buscar_no_genoma(prompt, memoria):
     if not memoria:
@@ -7,11 +8,15 @@ def buscar_no_genoma(prompt, memoria):
         
     melhor_chave = None
     melhor_score = 0.0
-    p_clean = prompt.lower().replace("_", " ").strip()
+    
+    # O FIX REAL: [a-z0-9]+ quebra underscores e espacos, ignorando pontuacao
+    tokens_prompt = re.findall(r'[a-z0-9]+', prompt.lower())
+    p_clean = " ".join(tokens_prompt)
 
     for chave, entry in memoria.items():
-        k_clean = chave.lower().replace("_", " ").strip()
-        # SequenceMatcher faz a similaridade de forma inteligente
+        tokens_chave = re.findall(r'[a-z0-9]+', chave.lower())
+        k_clean = " ".join(tokens_chave)
+        
         score = difflib.SequenceMatcher(None, p_clean, k_clean).ratio()
         
         if score > melhor_score:

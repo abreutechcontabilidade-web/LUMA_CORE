@@ -23,10 +23,10 @@ def _bater_chave(chave, prompt):
             payload = {"contents": [{"parts": [{"text": prompt}]}]}
             provider = "Gemini"
         else:
-            return (chave, None, "Provedor desconhecido")
+            return (chave, None, "Desconhecido")
 
         req = urllib.request.Request(url, data=json.dumps(payload).encode("utf-8"), headers=headers, method="POST")
-        with urllib.request.urlopen(req, timeout=8) as response:
+        with urllib.request.urlopen(req, timeout=12) as response:
             res_body = response.read().decode("utf-8", errors="replace")
             res_json = json.loads(res_body)
             if provider == "Gemini": texto = res_json["candidates"][0]["content"]["parts"][0]["text"]
@@ -40,22 +40,22 @@ def _bater_chave(chave, prompt):
 def disparar_enxame(prompt, anel):
     if not anel.keys: return None, "KeyRing vazio"
     chaves_ativas = [k for k in anel.keys if k not in anel.dead_keys]
-    if not chaves_ativas: return None, "Todas as chaves em cooldown"
+    if not chaves_ativas: return None, "Todas em cooldown"
 
-    print(f"[ENXAME] Disparando {len(chaves_ativas)} chaves em paralelo (Timeout 10s)...")
+    print(f"[ENXAME] Disparando {len(chaves_ativas)} chaves em paralelo...")
     
     with concurrent.futures.ThreadPoolExecutor(max_workers=len(chaves_ativas)) as executor:
         futuros = {executor.submit(_bater_chave, k, prompt): k for k in chaves_ativas}
-        done, not_done = concurrent.futures.wait(futuros, timeout=10)
+        done, _ = concurrent.futures.wait(futuros, timeout=15)
         
         for futuro in done:
             chave, resposta, erro = futuro.result()
             if resposta:
-                print(f"[ENXAME] Vitoria! Resposta obtida.")
+                print(f"[ENXAME] Vitoria! O Enxame respondeu.")
                 executor.shutdown(wait=False, cancel_futures=True)
                 return resposta, "Enxame Nuvem"
             elif erro in ["HTTP 402", "HTTP 429", "HTTP 401"]:
                 anel.mark_dead(chave, cooldown_hours=1)
                 
-    print("[ENXAME] Todas as chaves falharam ou deram timeout (10s).")
-    return None, "Todas as chaves falharam"
+    print("[ENXAME] Todas as chaves falharam ou deram timeout.")
+    return None, "Falha Total"

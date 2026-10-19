@@ -128,7 +128,12 @@ class LumaCoreHandler(http.server.SimpleHTTPRequestHandler):
                 else: self._send_json({"status": "error", "message": "Cérebro local não reconhece."})
             except Exception as e: self._send_json({"status": "error", "message": str(e)})
         elif self.path == "/api/generate_cloud":
-            import time, urllib.request, urllib.error, json
+            import time, json
+            from intelligence.swarm_engine import disparar_enxame
+            from intelligence.dom_parser import ler_miolo
+            from intelligence.onnx_bridge import inferir_mutacao, aplicar_mutacoes
+            from intelligence.onnx_sovereign import buscar_no_genoma
+            from intelligence.local_synthesis import gerar_esqueleto_local, processar_sintese
             
             start_time = time.perf_counter()
             content_length = int(self.headers.get("Content-Length", 0))
@@ -140,104 +145,60 @@ class LumaCoreHandler(http.server.SimpleHTTPRequestHandler):
                 self._send_json({"error": "JSON invalido"}, 400)
                 return
 
-            # CACHE E SINTESE LOCAL
-            try:
-                from intelligence.feature_engine import extrair_intencao
-                from intelligence.local_synthesis import processar_sintese
-                intent = extrair_intencao(prompt)
-                print(f"[DEBUG] Intent: '{intent}' | Memoria: {list(cerebro.dynamic_tools.keys())}")
+            # 1. BUSCA SEMANTICA ONNX (CAMINHO C)
+            print(f"[ONNX] Buscando correspondencia semantica para: '{prompt[:30]}...'")
+            intent_onnx, score = buscar_no_genoma(prompt, cerebro.dynamic_tools)
+            
+            if intent_onnx and score > 0.4:
+                print(f"[ONNX] Match encontrado! Chave: '{intent_onnx}' | Score: {score:.2f}")
+                entry = cerebro.dynamic_tools[intent_onnx]
+                html_atual = entry.get("html", "") if isinstance(entry, dict) else entry
                 
-                local_html, status_synth = processar_sintese(prompt)
-                if local_html:
-                    elapsed_local = round((time.perf_counter() - start_time) * 1000, 2)
-                    print(f"[LOCAL] Cache/Sintese: '{status_synth}' em {elapsed_local}ms.")
-                    self._send_json({"status": "success", "html": local_html, "fonte": status_synth, "elapsed_ms": elapsed_local})
+                miolo = ler_miolo(html_atual)
+                mutacoes = inferir_mutacao(prompt, miolo)
+                
+                if mutacoes:
+                    print(f"[ONNX] Mutacoes decididas: {len(mutacoes)}")
+                    html_evoluido = aplicar_mutacoes(html_atual, mutacoes)
+                    
+                    # GATE-19: Escrita via servidor
+                    cerebro.dynamic_tools[intent_onnx] = {"html": html_evoluido, "features": ["mutacao_onnx"]}
+                    with open(cerebro.db_path, "w", encoding="utf-8") as f:
+                        json.dump(cerebro.dynamic_tools, f, ensure_ascii=False, indent=2)
+                        
+                    elapsed = round((time.perf_counter() - start_time) * 1000, 2)
+                    print(f"[LOCAL] Evolucao aplicada via ONNX em {elapsed}ms.")
+                    self._send_json({"status": "success", "html": html_evoluido, "fonte": "ONNX_MUTACAO_LOCAL", "elapsed_ms": elapsed})
                     return
-            except Exception as e:
-                print(f"[AVISO] Erro no cache local: {e}")
-
-            # NUVEM (ENXAME)
-            from intelligence.swarm_engine import disparar_enxame
-            resposta_final, fonte = disparar_enxame(prompt, anel)
-            elapsed = round((time.perf_counter() - start_time) * 1000, 2)
-            
-            if resposta_final:
-                try:
-                    cerebro.aprender_da_nuvem(prompt, resposta_final)
-                    print(f"[MEMORIA] Ouro salvo via Enxame.")
-                except Exception: pass
-                self._send_json({"status": "success", "html": resposta_final, "fonte": fonte, "elapsed_ms": elapsed})
-            else:
-                self._send_json({"status": "error", "message": "Enxame falhou. Chaves esgotadas.", "fonte": fonte, "elapsed_ms": elapsed}, 500)
-            return
-            
-            # CODIGO ANTIGO ABAIXO (SERA IGNORADO)
-            tentativas = 0
-            max_tentativas = len(anel.keys) if anel.keys else 1
-            resposta_final = None
-            fonte = "Falha Total"
-            
-            while tentativas < max_tentativas:
-                chave = anel.get_key()
-                if not chave: break
-                
-                if chave.startswith("sk-or-v1"):
-                    url = "https://openrouter.ai/api/v1/chat/completions"
-                    headers = {"Authorization": f"Bearer {chave}", "Content-Type": "application/json"}
-                    payload = {"model": "deepseek/deepseek-chat", "messages": [{"role": "user", "content": prompt}]}
-                    provider_name = "OpenRouter"
-                elif chave.startswith("gsk_"):
-                    url = "https://api.groq.com/openai/v1/chat/completions"
-                    headers = {"Authorization": f"Bearer {chave}", "Content-Type": "application/json"}
-                    payload = {"model": "llama3-8b-8192", "messages": [{"role": "user", "content": prompt}]}
-                    provider_name = "Groq"
-                elif chave.startswith("sk-") and not chave.startswith("sk-or-v1"):
-                    url = "https://api.deepseek.com/chat/completions"
-                    headers = {"Authorization": f"Bearer {chave}", "Content-Type": "application/json"}
-                    payload = {"model": "deepseek-chat", "messages": [{"role": "user", "content": prompt}]}
-                    provider_name = "DeepSeek"
-                elif chave.startswith("AIza") or chave.startswith("AQ."):
-                    url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={chave}"
-                    headers = {"Content-Type": "application/json"}
-                    payload = {"contents": [{"parts": [{"text": prompt}]}]}
-                    provider_name = "Gemini"
                 else:
-                    tentativas += 1
-                    continue
-                
-                req = urllib.request.Request(url, data=json.dumps(payload).encode("utf-8"), headers=headers, method="POST")
-                
-                try:
-                    print(f"[NUVEM] Tentando {provider_name}...")
-                    with urllib.request.urlopen(req, timeout=30) as response:
-                        res_body = response.read().decode("utf-8", errors="replace")
-                        res_json = json.loads(res_body)
-                        if provider_name == "Gemini":
-                            resposta_final = res_json["candidates"][0]["content"]["parts"][0]["text"]
-                        else:
-                            resposta_final = res_json["choices"][0]["message"]["content"]
-                        fonte = f"{provider_name} Nuvem"
-                        break
-                except urllib.error.HTTPError as e:
-                    print(f"[ERRO] {provider_name} {e.code}")
-                    if e.code in [402, 429, 401]:
-                        anel.mark_dead(chave, cooldown_hours=1)
-                    tentativas += 1
-                except Exception as e:
-                    print(f"[ERRO] {provider_name}: {e}")
-                    tentativas += 1
-            
-            elapsed = round((time.perf_counter() - start_time) * 1000, 2)
+                    elapsed = round((time.perf_counter() - start_time) * 1000, 2)
+                    print(f"[LOCAL] Cache puro ONNX em {elapsed}ms.")
+                    self._send_json({"status": "success", "html": html_atual, "fonte": "ONNX_CACHE_PURO", "elapsed_ms": elapsed})
+                    return
+
+            # 2. SE NAO ACHAR NO ONNX, ENXAME PARALELO
+            print(f"[LOCAL] Nenhum match semantico (score: {score:.2f}). Acionando Enxame...")
+            resposta_final, fonte = disparar_enxame(prompt, anel)
             
             if resposta_final:
-                try:
-                    cerebro.aprender_da_nuvem(prompt, resposta_final)
-                    print(f"[MEMORIA] Ouro salvo para: {prompt[:30]}...")
-                except Exception as e:
-                    print(f"[ERRO] Falha ao salvar: {e}")
+                cerebro.aprender_da_nuvem(prompt, resposta_final)
+                print(f"[MEMORIA] Ouro salvo via Enxame.")
+                elapsed = round((time.perf_counter() - start_time) * 1000, 2)
                 self._send_json({"status": "success", "html": resposta_final, "fonte": fonte, "elapsed_ms": elapsed})
             else:
-                self._send_json({"status": "error", "message": "Chaves esgotadas.", "fonte": "KeyRing Esgotado", "elapsed_ms": elapsed}, 500)
+                # 3. AUTOPOIESE (GATE-19: Criacao via Servidor)
+                print("[AUTOPOIESE] Nuvem falhou. Criando esqueleto local via API...")
+                html_auto = gerar_esqueleto_local(prompt)
+                
+                # Salva no genoma
+                intent_local = prompt.lower().replace(" ", "_")[:20]
+                cerebro.dynamic_tools[intent_local] = {"html": html_auto, "features": ["autopoiese"]}
+                with open(cerebro.db_path, "w", encoding="utf-8") as f:
+                    json.dump(cerebro.dynamic_tools, f, ensure_ascii=False, indent=2)
+                    
+                elapsed = round((time.perf_counter() - start_time) * 1000, 2)
+                print(f"[AUTOPOIESE] Genoma atualizado via rota HTTP em {elapsed}ms.")
+                self._send_json({"status": "success", "html": html_auto, "fonte": "AUTOPOIESE_LOCAL", "elapsed_ms": elapsed})
 
     
 if __name__ == "__main__":
@@ -246,7 +207,7 @@ if __name__ == "__main__":
     sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
     PORT = 8080
     socketserver.TCPServer.allow_reuse_address = True
-    print(f"[LUMA_CORE] Servidor v63.0 ativo em http://127.0.0.1:{PORT}")
+    print(f"[LUMA_CORE] Servidor v67.0 (ONNX Soberano) ativo em http://127.0.0.1:{PORT}")
     try:
         with ThreadingHTTPServer(("127.0.0.1", PORT), LumaCoreHandler) as httpd:
             httpd.serve_forever()

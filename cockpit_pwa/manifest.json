@@ -1,0 +1,16 @@
+{
+  "name": "LUMA_CORE Cockpit",
+  "short_name": "LUMA",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0f172a",
+  "theme_color": "#38bdf8",
+  "description": "Painel Soberano de Hardware, Córtex e Inteligência.",
+  "icons": [
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/8649/8649662.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

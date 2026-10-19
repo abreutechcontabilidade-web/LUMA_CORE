@@ -1,0 +1,9 @@
+{
+  "jogo_da_velha": {
+    "html": "<!DOCTYPE html>\n<html>\n<head>\n<style>\nbody { font-family: sans-serif; display: flex; flex-direction: column; align-items: center; }\nbody { background-color: #8b0000 !important; color: white; }</style>\n</head>\n<body>\n<h1>Jogo da Velha Base</h1>\n<div id=\"board\" style=\"display: grid; grid-template-columns: repeat(3, 50px); gap: 5px;\">\n    <div class=\"cell\"></div><div class=\"cell\"></div><div class=\"cell\"></div>\n</div>\n<script>\n// Logica basica aqui\n\nfunction tocarSom() { var audio = new Audio('https://actions.google.com/sounds/v1/alarms/beep_short.ogg'); audio.play(); }\n</script>\n<button onclick='tocarSom()' style='position:fixed; bottom:10px; right:10px;'>Tocar Som</button></body>\n</html>",
+    "features": [
+      "cor_vermelha",
+      "som"
+    ]
+  }
+}

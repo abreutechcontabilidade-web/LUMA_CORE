@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LUMA VIGIA - Telemetria</title>
+    <style>
+        :root { --bg: #0f172a; --card: #1e293b; --text: #f8fafc; --accent: #38bdf8; --border: #334155; --green: #10b981; --red: #ef4444; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, sans-serif; }
+        body { background: var(--bg); color: var(--text); padding: 20px; display: flex; flex-direction: column; gap: 20px; min-height: 100vh; }
+        header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 15px; }
+        .badge { background: #065f46; color: #34d399; padding: 4px 10px; border-radius: 9999px; font-size: 0.85rem; font-weight: 600; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+        .card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 20px; }
+        h2 { font-size: 1.1rem; margin-bottom: 15px; color: var(--accent); }
+        .bar-container { background: #000; border-radius: 6px; height: 20px; overflow: hidden; margin: 8px 0; }
+        .bar-fill { height: 100%; background: var(--accent); transition: width 0.5s ease; }
+        .bar-fill.cpu { background: var(--red); }
+        .bar-fill.mem { background: #f59e0b; }
+        .bar-fill.disk { background: var(--green); }
+        .info-row { display: flex; justify-content: space-between; font-size: 0.9rem; margin: 4px 0; }
+        #audit-log { background: #090d16; padding: 10px; border-radius: 8px; font-family: monospace; font-size: 0.8rem; color: #94a3b8; overflow-y: auto; max-height: 200px; white-space: pre-wrap; }
+    </style>
+</head>
+<body>
+    <header>
+        <div>
+            <h1>LUMA VIGIA</h1>
+            <small style="color:#94a3b8;">Telemetria & Auditoria Soberana</small>
+        </div>
+        <span class="badge" id="status-badge">Conectando...</span>
+    </header>
+
+    <div class="grid">
+        <div class="card">
+            <h2>CPU</h2>
+            <div class="info-row"><span>Uso</span><strong id="cpu-val">--%</strong></div>
+            <div class="bar-container"><div class="bar-fill cpu" id="cpu-bar" style="width:0%"></div></div>
+            <div class="info-row"><span>Qualidade</span><span id="cpu-quality">--</span></div>
+        </div>
+
+        <div class="card">
+            <h2>Memória RAM</h2>
+            <div class="info-row"><span>Uso</span><strong id="mem-val">--%</strong></div>
+            <div class="bar-container"><div class="bar-fill mem" id="mem-bar" style="width:0%"></div></div>
+            <div class="info-row"><span>Detalhe</span><span id="mem-detail">--</span></div>
+        </div>
+
+        <div class="card">
+            <h2>Disco</h2>
+            <div class="info-row"><span>Uso</span><strong id="disk-val">--%</strong></div>
+            <div class="bar-container"><div class="bar-fill disk" id="disk-bar" style="width:0%"></div></div>
+            <div class="info-row"><span>Detalhe</span><span id="disk-detail">--</span></div>
+        </div>
+
+        <div class="card" style="grid-column: 1 / -1;">
+            <h2>Auditoria ZBIT (Append-Only)</h2>
+            <div id="audit-log">Aguardando eventos...</div>
+        </div>
+    </div>
+
+    <script>
+        async function fetchTelemetry() {
+            try {
+                const res = await fetch('/api/telemetry');
+                const data = await res.json();
+                if (data.status === "warmup") return;
+                
+                const s = data.snapshot;
+                if (s.cpu.value !== null) {
+                    document.getElementById('cpu-val').innerText = s.cpu.value + '%';
+                    document.getElementById('cpu-bar').style.width = s.cpu.value + '%';
+                    document.getElementById('cpu-quality').innerText = s.cpu.quality;
+                }
+                if (s.memory.percent !== null) {
+                    document.getElementById('mem-val').innerText = s.memory.percent + '%';
+                    document.getElementById('mem-bar').style.width = s.memory.percent + '%';
+                    document.getElementById('mem-detail').innerText = s.memory.used_mb + ' / ' + s.memory.total_mb + ' MB';
+                }
+                if (s.disk.percent !== null) {
+                    document.getElementById('disk-val').innerText = s.disk.percent + '%';
+                    document.getElementById('disk-bar').style.width = s.disk.percent + '%';
+                    document.getElementById('disk-detail').innerText = s.disk.used_gb + ' / ' + s.disk.total_gb + ' GB';
+                }
+
+                document.getElementById('status-badge').innerText = 'Ativo';
+                document.getElementById('status-badge').style.background = '#065f46';
+            } catch (e) {
+                document.getElementById('status-badge').innerText = 'Offline';
+                document.getElementById('status-badge').style.background = '#7f1d1d';
+            }
+        }
+
+        async function fetchAudit() {
+            try {
+                const res = await fetch('/api/audit');
+                const data = await res.json();
+                const log = document.getElementById('audit-log');
+                if (data.events && data.events.length > 0) {
+                    log.innerText = data.events.map(e => 
+                        `[${new Date(e.ts * 1000).toLocaleTimeString()}] ${e.event} | hash: ${e.hash.substring(0,12)}...`
+                    ).reverse().join('\n');
+                }
+            } catch (e) {}
+        }
+
+        setInterval(fetchTelemetry, 2000);
+        setInterval(fetchAudit, 5000);
+        fetchTelemetry();
+        fetchAudit();
+    </script>
+</body>
+</html>

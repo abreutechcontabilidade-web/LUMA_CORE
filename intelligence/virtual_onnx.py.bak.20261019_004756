@@ -1,0 +1,356 @@
+# -*- coding: utf-8 -*-
+import os
+import json
+
+class VirtualONNX:
+    def __init__(self):
+        self.dynamic_tools = {}
+        self.db_path = os.path.join(os.path.dirname(__file__), "dynamic_tools.json")
+        self._load_dynamic_tools()
+
+    def _load_dynamic_tools(self):
+        if os.path.exists(self.db_path):
+            try:
+                with open(self.db_path, "r", encoding="utf-8") as f:
+                    self.dynamic_tools = json.load(f)
+            except Exception:
+                self.dynamic_tools = {}
+
+    def processar(self, prompt: str):
+        norm = prompt.lower().strip()
+        if norm in self.dynamic_tools:
+            return self.dynamic_tools[norm], "APRENDIDO_NUVEM"
+        if "tetris" in norm:
+            return self._gerar_tetris(), "LOCAL_ONNX"
+        if "cobra" in norm or "snake" in norm or "cobrinha" in norm:
+            return self._gerar_snake(), "LOCAL_ONNX"
+        if "jogo da velha" in norm or "tic tac toe" in norm:
+            if "placar" in norm or "historico" in norm or "histórico" in norm or "placa" in norm:
+                return self._gerar_jogo_da_velha_premium(), "LOCAL_PREMIUM_ONISCIENTE"
+            return self._gerar_jogo_da_velha(), "LOCAL_ONNX"
+        if ("roman" in norm or "romano" in norm or "romana" in norm) and "calculadora" in norm:
+            return self._gerar_calculadora_romana(), "LOCAL_ONNX"
+        if "calculadora" in norm:
+            return self._gerar_calculadora_cientifica(), "LOCAL_ONNX"
+        if "pomodoro" in norm or "temporizador" in norm or "timer" in norm:
+            return self._gerar_pomodoro(), "LOCAL_ONNX"
+        if "tarefa" in norm or "todo" in norm or "to-do" in norm:
+            return self._gerar_todo(), "LOCAL_ONNX"
+        return None, "NUVEM_NECESSARIA"
+
+    def aprender_da_nuvem(self, prompt: str, html: str):
+        norm = prompt.lower().strip()
+        # O Quality Filter no app.py ja garantiu que esta versao e superior.
+        # Agora guardamos na memoria.
+        self.dynamic_tools[norm] = html
+        print(f"[FUSAO] Novo conhecimento guardado: '{prompt[:30]}...'")
+        try:
+            with open(self.db_path, "w", encoding="utf-8") as f:
+                json.dump(self.dynamic_tools, f, ensure_ascii=False, indent=2)
+            print(f"[FUSAO] Novo conhecimento guardado: '{prompt[:20]}...'")
+        except Exception as e:
+            print(f"[FUSAO] Erro ao guardar: {e}")
+
+    def _gerar_tetris(self):
+        return """<div style='display:flex; flex-direction:column; align-items:center; justify-content:center; height:100vh; font-family:sans-serif; color:#fff; background:#0f172a;'>
+            <h2 style='color:#38bdf8; margin-bottom:10px;'>Tetris (ONNX Local)</h2>
+            <div style='color:#94a3b8; margin-bottom:10px;'>Pontos: <span id='t-score' style='color:#10b981; font-weight:bold;'>0</span></div>
+            <canvas id='tetrisCanvas' width='200' height='400' style='background:#1e293b; border-radius:8px; border: 2px solid #334155;'></canvas>
+            <p style='color:#64748b; margin-top:10px; font-size:12px;'>Use as setas (Esq, Dir, Baixo) e Seta Cima para rodar</p>
+            <button onclick='initTetris()' style='margin-top:10px; padding:8px 16px; background:#38bdf8; color:#000; border:none; border-radius:6px; font-weight:bold; cursor:pointer;'>Reiniciar</button>
+            <script>
+                const canvas = document.getElementById('tetrisCanvas');
+                const ctx = canvas.getContext('2d');
+                const COLS = 10, ROWS = 20, BLOCK = 20;
+                let board = Array.from({length: ROWS}, () => Array(COLS).fill(0));
+                let score = 0;
+                let dropCounter = 0, dropInterval = 500, lastTime = 0;
+                let piece = null;
+                
+                const PIECES = [
+                    {shape: [[1,1,1,1]], color: '#38bdf8'},
+                    {shape: [[1,1],[1,1]], color: '#f59e0b'},
+                    {shape: [[0,1,0],[1,1,1]], color: '#a78bfa'},
+                    {shape: [[1,0,0],[1,1,1]], color: '#3b82f6'},
+                    {shape: [[0,0,1],[1,1,1]], color: '#f97316'},
+                    {shape: [[0,1,1],[1,1,0]], color: '#10b981'},
+                    {shape: [[1,1,0],[0,1,1]], color: '#ef4444'}
+                ];
+
+                function spawnPiece() {
+                    const p = PIECES[Math.floor(Math.random() * PIECES.length)];
+                    return { shape: p.shape, color: p.color, x: Math.floor((COLS - p.shape[0].length) / 2), y: 0 };
+                }
+
+                function collide() {
+                    for(let y=0; y<piece.shape.length; y++) {
+                        for(let x=0; x<piece.shape[y].length; x++) {
+                            if(piece.shape[y][x] !== 0) {
+                                let boardY = piece.y + y;
+                                let boardX = piece.x + x;
+                                if(boardY >= ROWS || boardX < 0 || boardX >= COLS || (boardY >= 0 && board[boardY][boardX] !== 0)) return true;
+                            }
+                        }
+                    }
+                    return false;
+                }
+
+                function merge() {
+                    piece.shape.forEach((row, y) => {
+                        row.forEach((value, x) => {
+                            if(value !== 0 && piece.y + y >= 0) board[piece.y + y][piece.x + x] = piece.color;
+                        });
+                    });
+                }
+
+                function rotate() {
+                    const oldShape = piece.shape;
+                    const newShape = oldShape[0].map((_, i) => oldShape.map(row => row[i]).reverse());
+                    piece.shape = newShape;
+                    if(collide()) piece.shape = oldShape;
+                }
+
+                function clearLines() {
+                    for(let y = ROWS - 1; y >= 0; y--) {
+                        if(board[y].every(val => val !== 0)) {
+                            board.splice(y, 1); board.unshift(Array(COLS).fill(0));
+                            score += 100; document.getElementById('t-score').innerText = score; y++;
+                        }
+                    }
+                }
+
+                function drop() {
+                    piece.y++;
+                    if(collide()) {
+                        piece.y--; merge(); clearLines(); piece = spawnPiece();
+                        if(collide()) { alert('Game Over! Pontos: ' + score); initTetris(); }
+                    }
+                    dropCounter = 0;
+                }
+
+                function update(time = 0) {
+                    const deltaTime = time - lastTime; lastTime = time; dropCounter += deltaTime;
+                    if(dropCounter > dropInterval) drop();
+                    draw(); requestAnimationFrame(update);
+                }
+
+                function draw() {
+                    ctx.fillStyle = '#1e293b'; ctx.fillRect(0, 0, canvas.width, canvas.height);
+                    board.forEach((row, y) => { row.forEach((color, x) => { if(color !== 0) { ctx.fillStyle = color; ctx.fillRect(x * BLOCK, y * BLOCK, BLOCK-1, BLOCK-1); } }); });
+                    if(piece) { ctx.fillStyle = piece.color; piece.shape.forEach((row, y) => { row.forEach((value, x) => { if(value !== 0) ctx.fillRect((piece.x + x) * BLOCK, (piece.y + y) * BLOCK, BLOCK-1, BLOCK-1); }); }); }
+                }
+
+                document.addEventListener('keydown', e => {
+                    if(!piece) return;
+                    if(e.key === 'ArrowLeft') { piece.x--; if(collide()) piece.x++; }
+                    if(e.key === 'ArrowRight') { piece.x++; if(collide()) piece.x--; }
+                    if(e.key === 'ArrowDown') drop();
+                    if(e.key === 'ArrowUp') rotate();
+                });
+
+                function initTetris() {
+                    board = Array.from({length: ROWS}, () => Array(COLS).fill(0));
+                    score = 0; dropInterval = 500; lastTime = 0; document.getElementById('t-score').innerText = score; piece = spawnPiece();
+                }
+                initTetris(); update();
+            </script>
+        </div>"""
+
+    def _gerar_snake(self):
+        return """<div style='display:flex; flex-direction:column; align-items:center; justify-content:center; height:100vh; font-family:sans-serif; color:#fff; background:#0f172a;'>
+            <h2 style='color:#10b981; margin-bottom:10px;'>Snake (ONNX Local)</h2>
+            <div style='color:#94a3b8; margin-bottom:10px; font-size:18px;'>Pontos: <span id='score' style='color:#38bdf8; font-weight:bold;'>0</span> | Nível: <span id='level' style='color:#f59e0b; font-weight:bold;'>1</span></div>
+            <canvas id='snakeCanvas' width='300' height='300' style='background:#1e293b; border-radius:8px; box-shadow: 0 0 20px rgba(16,185,129,0.2);'></canvas>
+            <div style='display:flex; gap:10px; margin-top:15px;'>
+                <button id='startBtn' onclick='toggleStart()' style='padding:8px 20px; background:#10b981; color:#fff; border:none; border-radius:6px; font-weight:bold; cursor:pointer;'>Iniciar</button>
+                <button onclick='resetSnake()' style='padding:8px 20px; background:#ef4444; color:#fff; border:none; border-radius:6px; font-weight:bold; cursor:pointer;'>Reiniciar</button>
+            </div>
+            <p style='color:#64748b; margin-top:10px; font-size:12px;'>Use as setas do teclado</p>
+            <script>
+                const canvas = document.getElementById('snakeCanvas'); const ctx = canvas.getContext('2d'); const grid = 15;
+                let count = 0; let score = 0; let level = 1; let speed = 200; let isRunning = false; let gameLoop = null;
+                let snake = { x: 150, y: 150, dx: grid, dy: 0, cells: [], maxCells: 4 }; let apple = { x: 45, y: 45 };
+                function getRandomInt(min, max) { return Math.floor(Math.random() * (max - min)) + min; }
+                function toggleStart() {
+                    if (isRunning) { isRunning = false; document.getElementById('startBtn').innerText = 'Continuar'; document.getElementById('startBtn').style.background = '#f59e0b'; } 
+                    else { isRunning = true; document.getElementById('startBtn').innerText = 'Pausar'; document.getElementById('startBtn').style.background = '#ef4444'; if(!gameLoop) gameLoop = setInterval(update, speed); }
+                }
+                function resetSnake() {
+                    isRunning = false; if(gameLoop) { clearInterval(gameLoop); gameLoop = null; }
+                    snake.x = 150; snake.y = 150; snake.cells = []; snake.maxCells = 4; snake.dx = grid; snake.dy = 0; score = 0; level = 1; speed = 200;
+                    document.getElementById('score').innerText = score; document.getElementById('level').innerText = level;
+                    document.getElementById('startBtn').innerText = 'Iniciar'; document.getElementById('startBtn').style.background = '#10b981';
+                    apple.x = getRandomInt(0, 20) * grid; apple.y = getRandomInt(0, 20) * grid; draw();
+                }
+                document.addEventListener('keydown', function(e) {
+                    if (!isRunning) return;
+                    if (e.which === 37 && snake.dx === 0) { snake.dx = -grid; snake.dy = 0; }
+                    else if (e.which === 38 && snake.dy === 0) { snake.dy = -grid; snake.dx = 0; }
+                    else if (e.which === 39 && snake.dx === 0) { snake.dx = grid; snake.dy = 0; }
+                    else if (e.which === 40 && snake.dy === 0) { snake.dy = -grid; snake.dx = 0; }
+                });
+                function draw() {
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    ctx.fillStyle = '#ef4444'; ctx.fillRect(apple.x, apple.y, grid-1, grid-1);
+                    ctx.fillStyle = '#10b981'; snake.cells.forEach(function(cell) { ctx.fillRect(cell.x, cell.y, grid-1, grid-1); });
+                }
+                function update() {
+                    if (!isRunning) return;
+                    snake.x += snake.dx; snake.y += snake.dy;
+                    if (snake.x < 0) snake.x = canvas.width - grid; else if (snake.x >= canvas.width) snake.x = 0;
+                    if (snake.y < 0) snake.y = canvas.height - grid; else if (snake.y >= canvas.height) snake.y = 0;
+                    snake.cells.unshift({ x: snake.x, y: snake.y }); if (snake.cells.length > snake.maxCells) snake.cells.pop();
+                    snake.cells.forEach(function(cell, index) {
+                        if (cell.x === apple.x && cell.y === apple.y) {
+                            snake.maxCells++; score++; document.getElementById('score').innerText = score;
+                            if (score % 5 === 0) { level++; document.getElementById('level').innerText = level; speed = Math.max(60, speed - 20); clearInterval(gameLoop); gameLoop = setInterval(update, speed); }
+                            apple.x = getRandomInt(0, 20) * grid; apple.y = getRandomInt(0, 20) * grid;
+                        }
+                        for (let i = index + 1; i < snake.cells.length; i++) {
+                            if (cell.x === snake.cells[i].x && cell.y === snake.cells[i].y) { isRunning = false; alert('Game Over! Pontos: ' + score); resetSnake(); }
+                        }
+                    });
+                    draw();
+                }
+                resetSnake();
+            </script>
+        </div>"""
+
+    def _gerar_pomodoro(self):
+        return """<div style='background:#1e293b; padding:30px; border-radius:12px; width:300px; font-family:sans-serif; text-align:center;'><h2 style='color:#ef4444; margin-top:0;'>Pomodoro</h2><h1 id='time' style='color:#fff; font-size:60px; margin:20px 0;'>25:00</h1><div style='display:flex; gap:10px; justify-content:center;'><button onclick='startTimer()' style='padding:10px 20px; background:#10b981; color:#fff; border:none; border-radius:6px; cursor:pointer; font-weight:bold;'>Iniciar</button><button onclick='resetTimer()' style='padding:10px 20px; background:#ef4444; color:#fff; border:none; border-radius:6px; cursor:pointer; font-weight:bold;'>Resetar</button></div><script>let timeLeft = 1500; let timerId = null; function updateDisplay() { let m = Math.floor(timeLeft / 60); let s = timeLeft % 60; document.getElementById('time').innerText = `${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`; } function startTimer() { if(timerId) return; timerId = setInterval(() => { if(timeLeft > 0) { timeLeft--; updateDisplay(); } else { clearInterval(timerId); timerId = null; alert('Tempo esgotado!'); } }, 1000); } function resetTimer() { clearInterval(timerId); timerId = null; timeLeft = 1500; updateDisplay(); }</script></div>"""
+
+    def _gerar_todo(self):
+        return """<div style='background:#1e293b; padding:20px; border-radius:12px; width:320px; font-family:sans-serif;'><h2 style='color:#38bdf8; margin-top:0;'>Lista de Tarefas</h2><div style='display:flex; gap:10px; margin-bottom:15px;'><input type='text' id='taskInput' placeholder='Nova tarefa...' style='flex:1; padding:10px; border-radius:6px; border:none; background:#0f172a; color:#fff;'><button onclick='addTask()' style='padding:10px; background:#10b981; color:#fff; border:none; border-radius:6px; cursor:pointer; font-weight:bold;'>+</button></div><ul id='taskList' style='list-style:none; padding:0; margin:0; color:#fff;'></ul><script>function addTask() { let input = document.getElementById('taskInput'); if(!input.value) return; let li = document.createElement('li'); li.style.cssText = 'background:#0f172a; padding:10px; margin-bottom:5px; border-radius:6px; display:flex; justify-content:space-between; align-items:center;'; li.innerHTML = `<span>${input.value}</span><button onclick='this.parentElement.remove()' style='background:none; border:none; color:#ef4444; cursor:pointer; font-weight:bold;'>X</button>`; document.getElementById('taskList').appendChild(li); input.value = ''; }</script></div>"""
+
+    def _gerar_jogo_da_velha(self):
+        return """<div style='display:flex; flex-direction:column; align-items:center; justify-content:center; min-height:100vh; font-family:sans-serif; color:#fff; background:#0f172a;'>
+            <h2 style='color:#38bdf8; margin-bottom:20px;'>Jogo da Velha (ONNX Basico)</h2>
+            <div id='board' style='display:grid; grid-template-columns:repeat(3, 100px); gap:10px; background:#1e293b; padding:10px; border-radius:12px;'>
+                <button class='cell' onclick='play(0)' style='height:100px; font-size:36px; font-weight:bold; background:#0f172a; color:#f8fafc; border:none; border-radius:8px; cursor:pointer;'> </button>
+                <button class='cell' onclick='play(1)' style='height:100px; font-size:36px; font-weight:bold; background:#0f172a; color:#f8fafc; border:none; border-radius:8px; cursor:pointer;'> </button>
+                <button class='cell' onclick='play(2)' style='height:100px; font-size:36px; font-weight:bold; background:#0f172a; color:#f8fafc; border:none; border-radius:8px; cursor:pointer;'> </button>
+                <button class='cell' onclick='play(3)' style='height:100px; font-size:36px; font-weight:bold; background:#0f172a; color:#f8fafc; border:none; border-radius:8px; cursor:pointer;'> </button>
+                <button class='cell' onclick='play(4)' style='height:100px; font-size:36px; font-weight:bold; background:#0f172a; color:#f8fafc; border:none; border-radius:8px; cursor:pointer;'> </button>
+                <button class='cell' onclick='play(5)' style='height:100px; font-size:36px; font-weight:bold; background:#0f172a; color:#f8fafc; border:none; border-radius:8px; cursor:pointer;'> </button>
+                <button class='cell' onclick='play(6)' style='height:100px; font-size:36px; font-weight:bold; background:#0f172a; color:#f8fafc; border:none; border-radius:8px; cursor:pointer;'> </button>
+                <button class='cell' onclick='play(7)' style='height:100px; font-size:36px; font-weight:bold; background:#0f172a; color:#f8fafc; border:none; border-radius:8px; cursor:pointer;'> </button>
+                <button class='cell' onclick='play(8)' style='height:100px; font-size:36px; font-weight:bold; background:#0f172a; color:#f8fafc; border:none; border-radius:8px; cursor:pointer;'> </button>
+            </div>
+            <p id='status' style='margin-top:20px; font-size:20px; color:#10b981; text-align:center;'>Vez do Jogador: X</p>
+            <button onclick='resetGame()' style='margin-top:20px; padding:10px 20px; background:#38bdf8; color:#000; border:none; border-radius:6px; font-weight:bold; cursor:pointer;'>Reiniciar Jogo</button>
+            <script>
+                let board = ["", "", "", "", "", "", "", "", ""];
+                let current = "X";
+                let active = true;
+                function play(i) {
+                    if (board[i] === "" && active) {
+                        board[i] = current;
+                        document.getElementsByClassName("cell")[i].innerText = current;
+                        if (checkWin()) {
+                            document.getElementById("status").innerText = "Vitoria do " + current + "!";
+                            document.getElementById("status").style.color = "#f59e0b";
+                            active = false;
+                        } else if (!board.includes("")) {
+                            document.getElementById("status").innerText = "Empate!";
+                            document.getElementById("status").style.color = "#ef4444";
+                            active = false;
+                        } else {
+                            current = current === "X" ? "O" : "X";
+                            document.getElementById("status").innerText = "Vez do Jogador: " + current;
+                        }
+                    }
+                }
+                function checkWin() {
+                    const wins = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
+                    return wins.some(w => board[w[0]] && board[w[0]] === board[w[1]] && board[w[1]] === board[w[2]]);
+                }
+                function resetGame() {
+                    board = ["", "", "", "", "", "", "", "", ""];
+                    current = "X";
+                    active = true;
+                    document.getElementById("status").innerText = "Vez do Jogador: X";
+                    document.getElementById("status").style.color = "#10b981";
+                    Array.from(document.getElementsByClassName("cell")).forEach(c => c.innerText = " ");
+                }
+            </script>
+        </div>"""
+
+    def _gerar_jogo_da_velha_premium(self):
+        return """<div style='display:flex; flex-direction:column; align-items:center; justify-content:center; min-height:100vh; font-family:sans-serif; color:#fff; background:#0f172a;'>
+            <h2 style='color:#38bdf8; margin-bottom:20px;'>Jogo da Velha (ONNX Premium)</h2>
+            <div style='display:flex; gap:20px;'>
+                <div>
+                    <div id='board' style='display:grid; grid-template-columns:repeat(3, 100px); gap:10px; background:#1e293b; padding:10px; border-radius:12px;'>
+                        <button class='cell' onclick='play(0)' style='height:100px; font-size:36px; font-weight:bold; background:#0f172a; color:#f8fafc; border:none; border-radius:8px; cursor:pointer;'> </button>
+                        <button class='cell' onclick='play(1)' style='height:100px; font-size:36px; font-weight:bold; background:#0f172a; color:#f8fafc; border:none; border-radius:8px; cursor:pointer;'> </button>
+                        <button class='cell' onclick='play(2)' style='height:100px; font-size:36px; font-weight:bold; background:#0f172a; color:#f8fafc; border:none; border-radius:8px; cursor:pointer;'> </button>
+                        <button class='cell' onclick='play(3)' style='height:100px; font-size:36px; font-weight:bold; background:#0f172a; color:#f8fafc; border:none; border-radius:8px; cursor:pointer;'> </button>
+                        <button class='cell' onclick='play(4)' style='height:100px; font-size:36px; font-weight:bold; background:#0f172a; color:#f8fafc; border:none; border-radius:8px; cursor:pointer;'> </button>
+                        <button class='cell' onclick='play(5)' style='height:100px; font-size:36px; font-weight:bold; background:#0f172a; color:#f8fafc; border:none; border-radius:8px; cursor:pointer;'> </button>
+                        <button class='cell' onclick='play(6)' style='height:100px; font-size:36px; font-weight:bold; background:#0f172a; color:#f8fafc; border:none; border-radius:8px; cursor:pointer;'> </button>
+                        <button class='cell' onclick='play(7)' style='height:100px; font-size:36px; font-weight:bold; background:#0f172a; color:#f8fafc; border:none; border-radius:8px; cursor:pointer;'> </button>
+                        <button class='cell' onclick='play(8)' style='height:100px; font-size:36px; font-weight:bold; background:#0f172a; color:#f8fafc; border:none; border-radius:8px; cursor:pointer;'> </button>
+                    </div>
+                    <p id='status' style='margin-top:20px; font-size:20px; color:#10b981; text-align:center;'>Vez do Jogador: X</p>
+                </div>
+                <div style='background:#1e293b; padding:15px; border-radius:12px; width:200px;'>
+                    <h3 style='color:#f59e0b; margin-top:0; text-align:center;'>Placar</h3>
+                    <p style='display:flex; justify-content:space-between;'><span>Jogador X:</span> <span id='score-x' style='color:#38bdf8; font-weight:bold;'>0</span></p>
+                    <p style='display:flex; justify-content:space-between;'><span>Jogador O:</span> <span id='score-o' style='color:#ef4444; font-weight:bold;'>0</span></p>
+                    <h3 style='color:#f59e0b; margin-top:20px; text-align:center;'>Histórico</h3>
+                    <ul id='history' style='list-style:none; padding:0; margin:0; font-size:12px; color:#94a3b8; max-height:150px; overflow-y:auto;'></ul>
+                </div>
+            </div>
+            <button onclick='resetGame()' style='margin-top:20px; padding:10px 20px; background:#38bdf8; color:#000; border:none; border-radius:6px; font-weight:bold; cursor:pointer;'>Reiniciar Jogo</button>
+            <script>
+                let board = ["", "", "", "", "", "", "", "", ""];
+                let current = "X";
+                let active = true;
+                let scoreX = 0; let scoreO = 0;
+                let moveCount = 0;
+                
+                function play(i) {
+                    if (board[i] === "" && active) {
+                        board[i] = current;
+                        document.getElementsByClassName("cell")[i].innerText = current;
+                        moveCount++;
+                        document.getElementById('history').innerHTML += `<li>Jogada ${moveCount}: ${current} na casa ${i}</li>`;
+                        
+                        if (checkWin()) {
+                            document.getElementById("status").innerText = "Vitória do " + current + "!";
+                            document.getElementById("status").style.color = "#f59e0b";
+                            if(current === "X") scoreX++; else scoreO++;
+                            document.getElementById('score-x').innerText = scoreX;
+                            document.getElementById('score-o').innerText = scoreO;
+                            active = false;
+                        } else if (!board.includes("")) {
+                            document.getElementById("status").innerText = "Empate!";
+                            document.getElementById("status").style.color = "#ef4444";
+                            active = false;
+                        } else {
+                            current = current === "X" ? "O" : "X";
+                            document.getElementById("status").innerText = "Vez do Jogador: " + current;
+                        }
+                    }
+                }
+                function checkWin() {
+                    const wins = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
+                    return wins.some(w => board[w[0]] && board[w[0]] === board[w[1]] && board[w[1]] === board[w[2]]);
+                }
+                function resetGame() {
+                    board = ["", "", "", "", "", "", "", "", ""];
+                    current = "X";
+                    active = true;
+                    moveCount = 0;
+                    document.getElementById("status").innerText = "Vez do Jogador: X";
+                    document.getElementById("status").style.color = "#10b981";
+                    document.getElementById('history').innerHTML = "";
+                    Array.from(document.getElementsByClassName("cell")).forEach(c => c.innerText = " ");
+                }
+            </script>
+        </div>"""
+    def _gerar_calculadora_cientifica(self):
+        return """<div style='background:#1e293b; padding:20px; border-radius:12px; width:340px; font-family:sans-serif;'><input type='text' id='calc-display' readonly style='width:100%; height:60px; background:#000; color:#38bdf8; font-size:24px; text-align:right; border:none; margin-bottom:15px; border-radius:6px; padding:10px; box-sizing:border-box;'><div style='display:grid; grid-template-columns:repeat(4, 1fr); gap:8px;'><button type="button" onclick="clearCalc()" style='padding:15px; background:#ef4444; color:#fff; border:none; border-radius:6px; font-size:18px;'>C</button><button type="button" onclick="appendCalc('(')" style='padding:15px; background:#334155; color:#fff; border:none; border-radius:6px;'>(</button><button type="button" onclick="appendCalc(')')" style='padding:15px; background:#334155; color:#fff; border:none; border-radius:6px;'>)</button><button type="button" onclick="appendCalc('/')" style='padding:15px; background:#f59e0b; color:#fff; border:none; border-radius:6px;'>/</button><button type="button" onclick="appendCalc('7')" style='padding:15px; background:#334155; color:#fff; border:none; border-radius:6px;'>7</button><button type="button" onclick="appendCalc('8')" style='padding:15px; background:#334155; color:#fff; border:none; border-radius:6px;'>8</button><button type="button" onclick="appendCalc('9')" style='padding:15px; background:#334155; color:#fff; border:none; border-radius:6px;'>9</button><button type="button" onclick="appendCalc('*')" style='padding:15px; background:#f59e0b; color:#fff; border:none; border-radius:6px;'>*</button><button type="button" onclick="appendCalc('4')" style='padding:15px; background:#334155; color:#fff; border:none; border-radius:6px;'>4</button><button type="button" onclick="appendCalc('5')" style='padding:15px; background:#334155; color:#fff; border:none; border-radius:6px;'>5</button><button type="button" onclick="appendCalc('6')" style='padding:15px; background:#334155; color:#fff; border:none; border-radius:6px;'>6</button><button type="button" onclick="appendCalc('-')" style='padding:15px; background:#f59e0b; color:#fff; border:none; border-radius:6px;'>-</button><button type="button" onclick="appendCalc('1')" style='padding:15px; background:#334155; color:#fff; border:none; border-radius:6px;'>1</button><button type="button" onclick="appendCalc('2')" style='padding:15px; background:#334155; color:#fff; border:none; border-radius:6px;'>2</button><button type="button" onclick="appendCalc('3')" style='padding:15px; background:#334155; color:#fff; border:none; border-radius:6px;'>3</button><button type="button" onclick="appendCalc('+')" style='padding:15px; background:#f59e0b; color:#fff; border:none; border-radius:6px;'>+</button><button type="button" onclick="appendCalc('0')" style='padding:15px; background:#334155; color:#fff; border:none; border-radius:6px;'>0</button><button type="button" onclick="appendCalc('.')" style='padding:15px; background:#334155; color:#fff; border:none; border-radius:6px;'>.</button><button type="button" onclick="calcResult()" style='padding:15px; background:#10b981; color:#fff; border:none; border-radius:6px; grid-column:span 2; font-weight:bold;'>=</button></div><script>let cStr = ""; function appendCalc(v) { cStr += v; document.getElementById("calc-display").value = cStr; } function clearCalc() { cStr = ""; document.getElementById("calc-display").value = ""; } function calcResult() { try { cStr = eval(cStr).toString(); document.getElementById("calc-display").value = cStr; } catch(e) { document.getElementById("calc-display").value = "Erro"; cStr = ""; } }</script></div>"""
+
+    def _gerar_calculadora_romana(self):
+        return """<div style='background:#1e293b; padding:20px; border-radius:12px; width:300px; font-family:sans-serif;'><input type='text' id='roman-display' readonly style='width:100%; height:60px; background:#000; color:#38bdf8; font-size:24px; text-align:right; border:none; margin-bottom:15px; border-radius:6px; padding:10px; box-sizing:border-box;'><div style='display:grid; grid-template-columns:repeat(4, 1fr); gap:8px;'><button type="button" onclick="appendRoman('M')" style='padding:15px; background:#334155; color:#fff; border:none; border-radius:6px;'>M</button><button type="button" onclick="appendRoman('D')" style='padding:15px; background:#334155; color:#fff; border:none; border-radius:6px;'>D</button><button type="button" onclick="appendRoman('C')" style='padding:15px; background:#334155; color:#fff; border:none; border-radius:6px;'>C</button><button type="button" onclick="appendRoman('+')" style='padding:15px; background:#f59e0b; color:#fff; border:none; border-radius:6px;'>+</button><button type="button" onclick="appendRoman('L')" style='padding:15px; background:#334155; color:#fff; border:none; border-radius:6px;'>L</button><button type="button" onclick="appendRoman('X')" style='padding:15px; background:#334155; color:#fff; border:none; border-radius:6px;'>X</button><button type="button" onclick="appendRoman('V')" style='padding:15px; background:#334155; color:#fff; border:none; border-radius:6px;'>V</button><button type="button" onclick="appendRoman('-')" style='padding:15px; background:#f59e0b; color:#fff; border:none; border-radius:6px;'>-</button><button type="button" onclick="appendRoman('I')" style='padding:15px; background:#334155; color:#fff; border:none; border-radius:6px;'>I</button><button type="button" onclick="clearRoman()" style='padding:15px; background:#ef4444; color:#fff; border:none; border-radius:6px;'>C</button><button type="button" onclick="calcRoman()" style='padding:15px; background:#10b981; color:#fff; border:none; border-radius:6px; grid-column:span 2; font-weight:bold;'>=</button></div><script>let rCur = ''; let rNum1 = 0; let rOp = ''; function appendRoman(r) { rCur += r; document.getElementById('roman-display').value = rCur; } function clearRoman() { rCur = ''; rNum1 = 0; rOp = ''; document.getElementById('roman-display').value = ''; } function calcRoman() { let map = {I:1,V:5,X:10,L:50,C:100,D:500,M:1000}; let toInt = (s) => { let v = 0; for(let i=0; i<s.length; i++){ let c = map[s[i]], n = map[s[i+1]]; if(n>c){v+=n-c;i++;} else {v+=c;} } return v; }; let toRoman = (n) => { if(n<=0) return ''; const r = {M:1000,CM:900,D:500,CD:400,C:100,XC:90,L:50,XL:40,X:10,IX:9,V:5,IV:4,I:1}; let res=''; for(let k in r){ while(n>=r[k]){res+=k;n-=r[k];} } return res; }; if(rOp === '+') { let r = toRoman(rNum1 + toInt(rCur)); document.getElementById('roman-display').value = r; rCur = r; } }</script></div>"""

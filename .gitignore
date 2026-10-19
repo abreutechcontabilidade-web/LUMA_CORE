@@ -1,0 +1,21 @@
+# CISO GATE-9: PROIBIDO SUBIR CREDENCIAIS
+vault.json
+chaves.txt
+*.key
+*.pem
+_fix_path_and_key.py
+_inject_key_and_fix_path.py
+intelligence/key_detector.py
+
+# PROIBIDO SUBIR AMBIENTES VIRTUAIS
+.venv/
+venv/
+__pycache__/
+*.pyc
+
+# PROIBIDO SUBIR BACKUPS E LOGS
+*.bak_*
+*.log
+boot_t59.txt
+_t*.json
+dynamic_tools.json.PERICIA_*

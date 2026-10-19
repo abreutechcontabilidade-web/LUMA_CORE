@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LUMA_CORE - Duelo Blindado</title>
+    <style>
+        body { background: #0f172a; color: #f8fafc; font-family: sans-serif; display: flex; height: 100vh; margin: 0; overflow: hidden; }
+        .sidebar { width: 380px; background: #1e293b; border-right: 1px solid #334155; padding: 20px; display: flex; flex-direction: column; gap: 15px; overflow-y: auto; }
+        .arena { flex: 1; display: flex; gap: 10px; padding: 10px; }
+        .pane { flex: 1; display: flex; flex-direction: column; background: #000; border-radius: 8px; overflow: hidden; border: 1px solid #334155; }
+        .pane-header { background: #1e293b; padding: 10px; text-align: center; font-weight: bold; border-bottom: 1px solid #334155; }
+        .header-local { color: #10b981; }
+        .header-cloud { color: #38bdf8; }
+        .pane iframe { width: 100%; height: 100%; border: none; background: #0f172a; }
+        h1 { color: #38bdf8; text-align: center; margin: 0 0 10px 0; font-size: 1.5rem; }
+        .section { background: #0f172a; padding: 15px; border-radius: 8px; border: 1px solid #334155; }
+        h2 { font-size: 1rem; color: #cbd5e1; margin-top: 0; border-bottom: 1px solid #334155; padding-bottom: 5px; }
+        textarea { width: 100%; height: 80px; background: #000; color: #fff; border: 1px solid #334155; border-radius: 6px; padding: 10px; box-sizing: border-box; resize: none; font-family: inherit; margin-bottom: 10px; }
+        button { background: #38bdf8; color: #0f172a; border: none; padding: 10px 15px; border-radius: 6px; font-weight: bold; cursor: pointer; width: 100%; transition: 0.2s; font-size: 1rem;}
+        button:hover { opacity: 0.8; }
+        .timer { font-size: 0.75rem; color: #94a3b8; margin-top: 4px; }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <h1>LUMA_CORE v18.0</h1>
+        <p style="text-align:center; color:#94a3b8; font-size:0.9rem; margin-top:0;">Duelo Blindado</p>
+
+        <div class="section">
+            <h2>Hardware (Brilho)</h2>
+            <input type="range" id="brilho" min="0" max="100" value="80" style="width:100%;" oninput="debounceAcao(this.value)">
+            <h2 style="margin-top:10px;">Temperatura (Calor)</h2>
+            <input type="range" id="calor" min="0" max="100" value="50" style="width:100%;" oninput="debounceCalor(this.value)">
+            <div id="log-hw" style="font-size:0.8rem; color:#94a3b8; margin-top:5px;">Aguardando...</div>
+        </div>
+
+        <div class="section">
+            <h2>Córtex (Bio-Ritmo)</h2>
+            <button onclick="consultarCortex()" style="background: #8b5cf6; color: white; margin-bottom:10px;">Consultar Estado</button>
+            <div id="log-cortex" style="font-size: 0.85rem; color: #a78bfa;">Aguardando...</div>
+        </div>
+
+        <div class="section">
+            <h2>Fábrica SOTA (Duelo)</h2>
+            <textarea id="prompt-input" placeholder="Ex: Criar jogo da velha, Tetris, Calculadora..."></textarea>
+            <button onclick="iniciarDuelo()">Iniciar Duelo!</button>
+            <div id="log-duelo" style="font-size:0.8rem; color:#94a3b8; margin-top:5px;">Aguardando...</div>
+        </div>
+    </div>
+
+    <div class="arena">
+        <div class="pane">
+            <div class="pane-header header-local">Cérebro Local <span id="timer-local" class="timer"></span></div>
+            <iframe id="preview-local" sandbox="allow-scripts" srcdoc="<body style='color:#64748b; display:flex; justify-content:center; align-items:center; height:100vh;'><h3>Aguardando...</h3></body>"></iframe>
+        </div>
+        <div class="pane">
+            <div class="pane-header header-cloud">Nuvem (LLM) <span id="timer-cloud" class="timer"></span></div>
+            <iframe id="preview-cloud" sandbox="allow-scripts" srcdoc="<body style='color:#64748b; display:flex; justify-content:center; align-items:center; height:100vh;'><h3>Aguardando...</h3></body>"></iframe>
+        </div>
+    </div>
+
+    <script>
+        let sliderTimeout;
+        let sliderCalorTimeout;
+
+        async function enviarAcao(nivel) {
+            const log = document.getElementById('log-hw');
+            log.innerText = `Brilho: ${nivel}...`;
+            try {
+                const res = await fetch('/api/action', {
+                    method: 'POST', headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ action: 'set_brightness', value: nivel })
+                });
+                const data = await res.json();
+                log.innerText = data.resultado || 'OK';
+            } catch(e) { log.innerText = 'Erro de conexão'; }
+        }
+
+        async function enviarCalor(nivel) {
+            const log = document.getElementById('log-hw');
+            log.innerText = `Temperatura: ${nivel}...`;
+            try {
+                const res = await fetch('/api/action', {
+                    method: 'POST', headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ action: 'set_temperature', value: nivel })
+                });
+                const data = await res.json();
+                log.innerText = data.resultado || 'OK';
+            } catch(e) { log.innerText = 'Erro de conexão'; }
+        }
+
+        function debounceAcao(nivel) {
+            clearTimeout(sliderTimeout);
+            sliderTimeout = setTimeout(() => enviarAcao(nivel), 300);
+        }
+
+        function debounceCalor(nivel) {
+            clearTimeout(sliderCalorTimeout);
+            sliderCalorTimeout = setTimeout(() => enviarCalor(nivel), 300);
+        }
+
+        async function consultarCortex() {
+            const logDiv = document.getElementById('log-cortex');
+            logDiv.innerText = "A consultar...";
+            try {
+                const res = await fetch('/api/cortex');
+                const data = await res.json();
+                logDiv.innerText = `Foco: ${data.foco} - ${data.diretriz}`;
+            } catch(e) { logDiv.innerText = "Erro"; }
+        }
+
+        async function iniciarDuelo() {
+            const prompt = document.getElementById('prompt-input').value;
+            if (!prompt) return;
+
+            const frameLocal = document.getElementById('preview-local');
+            const frameCloud = document.getElementById('preview-cloud');
+            const timerLocal = document.getElementById('timer-local');
+            const timerCloud = document.getElementById('timer-cloud');
+            const logDuelo = document.getElementById('log-duelo');
+
+            frameLocal.srcdoc = "<body style='color:#10b981; display:flex; justify-content:center; align-items:center; height:100vh;'><h3>A processar...</h3></body>";
+            frameCloud.srcdoc = "<body style='color:#38bdf8; display:flex; justify-content:center; align-items:center; height:100vh;'><h3>A Nuvem está a pensar...</h3></body>";
+            timerLocal.innerText = "";
+            timerCloud.innerText = "";
+            logDuelo.innerText = "Duelo iniciado...";
+
+            const wrapper = `<style>body{background:#0f172a;color:#fff;font-family:sans-serif;display:flex;justify-content:center;align-items:center;height:100vh;margin:0;}</style>`;
+
+            fetch('/api/generate_local', {
+                method: 'POST', headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ prompt: prompt })
+            }).then(res => res.json()).then(data => {
+                if(data.status === "success") {
+                    frameLocal.srcdoc = wrapper + data.html;
+                    timerLocal.innerText = `(${data.elapsed_ms}ms real)`;
+                    logDuelo.innerText = "Local respondeu.";
+                } else {
+                    frameLocal.srcdoc = `<body style='color:#ef4444; display:flex; justify-content:center; align-items:center; height:100vh;'><h3>${data.message}</h3></body>`;
+                    timerLocal.innerText = `(${data.elapsed_ms}ms)`;
+                }
+            }).catch(() => {
+                frameLocal.srcdoc = "<body style='color:#ef4444;'>Erro local.</body>";
+            });
+
+            fetch('/api/generate_cloud', {
+                method: 'POST', headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ prompt: prompt })
+            }).then(res => res.json()).then(data => {
+                if(data.status === "success") {
+                    frameCloud.srcdoc = wrapper + data.html;
+                    timerCloud.innerText = `(${data.elapsed_ms}ms real)`;
+                    logDuelo.innerText = "Nuvem respondeu.";
+                } else {
+                    frameCloud.srcdoc = `<body style='color:#ef4444; display:flex; justify-content:center; align-items:center; height:100vh;'><h3>${data.message}</h3></body>`;
+                    timerCloud.innerText = `(${data.elapsed_ms}ms)`;
+                }
+            }).catch(() => {
+                frameCloud.srcdoc = "<body style='color:#ef4444;'>Erro na nuvem.</body>";
+            });
+        }
+    </script>
+</body>
+</html>

@@ -5,5 +5,9 @@
       "cor_vermelha",
       "som"
     ]
+  },
+  "calculadora": {
+    "html": "<!DOCTYPE html><html><head><style>body{background:#1e293b;color:white;display:flex;justify-content:center;align-items:center;height:100vh;} .calc{background:#0f172a;padding:20px;border-radius:10px;display:grid;grid-template-columns:repeat(4,1fr);gap:10px;}</style></head><body><div class=\"calc\"><input type=\"text\" style=\"grid-column:span 4;padding:10px;font-size:20px;\"><button>7</button><button>8</button><button>9</button><button>/</button><button>4</button><button>5</button><button>6</button><button>*</button><button>1</button><button>2</button><button>3</button><button>-</button><button>0</button><button>.</button><button>=</button><button>+</button></div></body></html>",
+    "features": []
   }
 }

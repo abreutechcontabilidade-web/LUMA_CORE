@@ -12,13 +12,9 @@ def guardar_memoria(db_path, memoria):
 
 def extrair_intencao(prompt: str) -> str:
     p = prompt.lower()
-    tags = []
-    if "velha" in p or "tic tac toe" in p: tags.append("jogo_da_velha")
-    if "placar" in p or "placa" in p: tags.append("placar")
-    if "empate" in p: tags.append("empate")
-    if "historico" in p or "histórico" in p: tags.append("historico")
-    # Nao adiciona "cores" ou "som" na chave base, pois sao features de sintese
-    return "_".join(sorted(tags)) if tags else "jogo_da_velha" 
+    if "velha" in p or "tic tac toe" in p: return "jogo_da_velha"
+    if "calculadora" in p or "calcular" in p: return "calculadora"
+    return "desconhecido"
 
 def extrair_features(prompt: str) -> list:
     p = prompt.lower()

@@ -156,7 +156,22 @@ class LumaCoreHandler(http.server.SimpleHTTPRequestHandler):
             except Exception as e:
                 print(f"[AVISO] Erro no cache local: {e}")
 
-            # NUVEM
+            # NUVEM (ENXAME)
+            from intelligence.swarm_engine import disparar_enxame
+            resposta_final, fonte = disparar_enxame(prompt, anel)
+            elapsed = round((time.perf_counter() - start_time) * 1000, 2)
+            
+            if resposta_final:
+                try:
+                    cerebro.aprender_da_nuvem(prompt, resposta_final)
+                    print(f"[MEMORIA] Ouro salvo via Enxame.")
+                except Exception: pass
+                self._send_json({"status": "success", "html": resposta_final, "fonte": fonte, "elapsed_ms": elapsed})
+            else:
+                self._send_json({"status": "error", "message": "Enxame falhou. Chaves esgotadas.", "fonte": fonte, "elapsed_ms": elapsed}, 500)
+            return
+            
+            # CODIGO ANTIGO ABAIXO (SERA IGNORADO)
             tentativas = 0
             max_tentativas = len(anel.keys) if anel.keys else 1
             resposta_final = None

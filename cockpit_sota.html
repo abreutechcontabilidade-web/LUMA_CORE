@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LUMA CORE - Cockpit SOTA</title>
+    <style>
+        :root { --bg: #0f172a; --card: #1e293b; --text: #f8fafc; --accent: #38bdf8; --border: #334155; --green: #10b981; --red: #ef4444; --yellow: #f59e0b; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, sans-serif; }
+        body { background: var(--bg); color: var(--text); padding: 20px; display: flex; flex-direction: column; gap: 20px; min-height: 100vh; }
+        header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 15px; }
+        .badge { background: #065f46; color: #34d399; padding: 4px 10px; border-radius: 9999px; font-size: 0.85rem; font-weight: 600; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
+        .card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 20px; display: flex; flex-direction: column; gap: 10px; position: relative; overflow: hidden; }
+        .card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 4px; background: var(--border); }
+        .card.onnx::before { background: var(--accent); }
+        .card.swarm::before { background: var(--green); }
+        .card.web::before { background: var(--yellow); }
+        .card.auto::before { background: var(--red); }
+        h2 { font-size: 1.1rem; color: var(--text); }
+        p { font-size: 0.9rem; color: #94a3b8; }
+        .status-dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; margin-right: 8px; }
+        .dot-green { background: var(--green); box-shadow: 0 0 10px var(--green); }
+        .dot-yellow { background: var(--yellow); box-shadow: 0 0 10px var(--yellow); }
+        .dot-red { background: var(--red); box-shadow: 0 0 10px var(--red); }
+        
+        .terminal-container { background: #000; border-radius: 12px; padding: 20px; border: 1px solid var(--border); display: flex; flex-direction: column; gap: 15px; }
+        .terminal-log { font-family: monospace; font-size: 0.85rem; color: #94a3b8; height: 150px; overflow-y: auto; background: #090d16; padding: 10px; border-radius: 8px; }
+        .input-group { display: flex; gap: 10px; }
+        input[type="text"] { flex: 1; padding: 12px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg); color: var(--text); outline: none; }
+        input[type="text"]:focus { border-color: var(--accent); }
+        button { padding: 12px 24px; border: none; border-radius: 8px; background: var(--accent); color: #000; font-weight: bold; cursor: pointer; transition: 0.2s; }
+        button:hover { background: #0284c7; }
+        button:disabled { background: #475569; color: #94a3b8; cursor: not-allowed; }
+    </style>
+</head>
+<body>
+    <header>
+        <div>
+            <h1>LUMA CORE - Cockpit SOTA</h1>
+            <small style="color:#94a3b8;">Hierarquia de 4 Níveis de Inteligência</small>
+        </div>
+        <span class="badge" id="status-badge">Conectando...</span>
+    </header>
+
+    <div class="grid">
+        <div class="card onnx">
+            <h2><span class="status-dot dot-green"></span>Nível 1: ONNX Local</h2>
+            <p>Memória Genômica. Cache de HTML e similaridade semântica local.</p>
+            <strong style="color:var(--accent); margin-top:auto;">Tempo de resposta: ~5ms</strong>
+        </div>
+        <div class="card swarm">
+            <h2><span class="status-dot dot-red"></span>Nível 2: Enxame</h2>
+            <p>28 chaves de API em paralelo. A primeira que responder ganha.</p>
+            <strong style="color:var(--green); margin-top:auto;">Status: Em espera / Chaves Esgotadas</strong>
+        </div>
+        <div class="card web">
+            <h2><span class="status-dot dot-green"></span>Nível 3: Web Learner</h2>
+            <p>GitHub API autenticada. Aprende código real de programadores humanos.</p>
+            <strong style="color:var(--yellow); margin-top:auto;">Status: Autenticado</strong>
+        </div>
+        <div class="card auto">
+            <h2><span class="status-dot dot-green"></span>Nível 4: Autopoiese</h2>
+            <p>Criação do zero. O motor gera o esqueleto e a lógica se tudo falhar.</p>
+            <strong style="color:var(--red); margin-top:auto;">Status: Pronto</strong>
+        </div>
+    </div>
+
+    <div class="terminal-container">
+        <h2>Terminal de Comando</h2>
+        <div class="terminal-log" id="log">Aguardando comandos...</div>
+        <div class="input-group">
+            <input type="text" id="prompt" placeholder="Ex: criar jogo da cobra com placar e cores" onkeypress="if(event.key === 'Enter') enviarPedido()">
+            <button id="btn-enviar" onclick="enviarPedido()">Executar</button>
+        </div>
+    </div>
+
+    <script>
+        const log = document.getElementById('log');
+        const btn = document.getElementById('btn-enviar');
+        const input = document.getElementById('prompt');
+        const badge = document.getElementById('status-badge');
+
+        function addLog(msg) {
+            log.innerHTML += `<div>> ${msg}</div>`;
+            log.scrollTop = log.scrollHeight;
+        }
+
+        async function checkStatus() {
+            try {
+                const res = await fetch('http://127.0.0.1:8080/api/status');
+                if (res.ok) {
+                    badge.innerText = 'ONLINE';
+                    badge.style.background = '#065f46';
+                    badge.style.color = '#34d399';
+                } else throw new Error();
+            } catch (e) {
+                badge.innerText = 'OFFLINE';
+                badge.style.background = '#7f1d1d';
+                badge.style.color = '#f87171';
+            }
+        }
+
+        async function enviarPedido() {
+            const prompt = input.value.trim();
+            if (!prompt) return;
+            
+            btn.disabled = true;
+            addLog(`A enviar: "${prompt}"...`);
+            
+            try {
+                const res = await fetch('http://127.0.0.1:8080/api/generate_cloud', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ prompt: prompt })
+                });
+                
+                const data = await res.json();
+                addLog(`[SUCESSO] Fonte: ${data.fonte} | Tempo: ${data.elapsed_ms}ms`);
+                
+                if (data.html) {
+                    addLog(`A abrir preview no navegador...`);
+                    const blob = new Blob([data.html], { type: 'text/html' });
+                    const url = URL.createObjectURL(blob);
+                    window.open(url, '_blank');
+                }
+            } catch (e) {
+                addLog(`[ERRO] ${e.message}`);
+            }
+            
+            btn.disabled = false;
+            input.value = '';
+        }
+
+        setInterval(checkStatus, 3000);
+        checkStatus();
+    </script>
+</body>
+</html>

@@ -3,6 +3,7 @@
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 try:
     from intelligence.sintetizador_local import sintetizar_jogo
+    from intelligence.algoritmos_soberanos import obter_melhor_jogada_ia
     from intelligence.orquestrador import similaridade_cosseno, analisar_dna, classificar_intencao
 except ImportError as e:
     print(f"[BOOT ERROR] {e}"); sys.exit(1)
@@ -117,6 +118,17 @@ class Handler(http.server.SimpleHTTPRequestHandler):
             sim = similaridade_cosseno(v1, v2)
             self._send_json({"status": "success", "similaridade": sim, "fonte": "RECOMMENDATION_ENGINE"}); return
 
+        # 5. MICROSSERVIÇO: MINIMAX (Decisão Perfeita / IA)
+        if self.path == "/api/minimax":
+            n = int(self.headers.get('Content-Length', 0))
+            body = json.loads(self.rfile.read(n).decode('utf-8'))
+            board = body.get("board", ['', '', '', '', '', '', '', '', ''])
+            try:
+                best_move = obter_melhor_jogada_ia(board)
+                self._send_json({"status": "success", "best_move": best_move, "fonte": "MINIMAX_ENGINE"})
+            except Exception as e:
+                self._send_json({"status": "error", "msg": str(e), "fonte": "MINIMAX_ENGINE"})
+            return
         self.send_response(404); self.end_headers()
 
 socketserver.TCPServer.allow_reuse_address = True
@@ -124,5 +136,6 @@ HOST = "0.0.0.0" if os.environ.get("RENDER") or os.environ.get("VERCEL") else "1
 print(f"[V159 CLOUD] Servidor a arrancar em {HOST}:{PORT}...")
 with socketserver.TCPServer((HOST, PORT), Handler) as httpd:
     httpd.serve_forever()
+
 
 

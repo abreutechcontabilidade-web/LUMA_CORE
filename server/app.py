@@ -1,4 +1,4 @@
-﻿import http.server, socketserver, json, os, sys, re, time, shutil, difflib
+import http.server, socketserver, json, os, sys, re, time, shutil, difflib
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 try:
@@ -43,29 +43,32 @@ def extrair_chave(prompt):
 
 class Handler(http.server.SimpleHTTPRequestHandler):
     def log_message(self, fmt, *args): return
-
+    
     def translate_path(self, path):
         path = path.split('?', 1)[0].split('#', 1)[0]
         if path.startswith("/artefacts/"):
             filename = path.replace("/artefacts/", "")
             return os.path.join(ARTEFACTOS_DIR, filename)
         return super().translate_path(path)
-    
+
     def _send_json(self, data):
         self.send_response(200)
-        self.send_header('Content-type', 'application/json')
+        self.send_header('Content-type', 'application/json; charset=utf-8')
         self.end_headers()
         self.wfile.write(json.dumps(data, ensure_ascii=False).encode('utf-8'))
 
     def do_GET(self):
         if self.path == "/api/status":
-            self._send_json({"status": "LUMA_CORE v158 (Dashboard)", "services": ["games", "dna", "recommendation"]}); return
+            self._send_json({"status": "LUMA_CORE v159 (Cloud Ready)", "services": ["games", "dna", "recommendation"]}); return
         
         if self.path == "/" or self.path == "/hub":
             try: arquivos = [f for f in os.listdir(ARTEFACTOS_DIR) if f.startswith("chave_") and f.endswith(".html")]
             except Exception: arquivos = []
             
-            cards = "".join([f'<div class="card"><h2>{f.replace("chave_","").replace(".html","").title()}</h2><a href="/artefacts/{f}" target="_blank">JOGAR</a></div>' for f in arquivos])
+            cards = ""
+            for f in arquivos:
+                nome_jogo = f.replace("chave_","").replace(".html","").replace("_"," ").title()
+                cards += f'<div class="card"><h2>{nome_jogo}</h2><a href="/artefacts/{f}" target="_blank">JOGAR</a></div>'
             
             hub = f"""<!DOCTYPE html>
 <html lang="pt-BR">
@@ -81,24 +84,22 @@ class Handler(http.server.SimpleHTTPRequestHandler):
     button {{ background: #00ffe1; color: #000; border: none; padding: 10px 20px; font-weight: bold; cursor: pointer; }}
     button:hover {{ background: #ff2fd6; color: #fff; }}
     .result {{ margin-top: 15px; padding: 10px; border-left: 4px solid #ff2fd6; background: rgba(255,47,214,0.1); }}
-    .arcade-grid {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; }}
-    .card {{ border: 1px solid #00ffe1; padding: 15px; text-align: center; }}
-    .card a {{ color: #000; background: #00ffe1; padding: 5px 10px; text-decoration: none; font-weight: bold; display: inline-block; margin-top: 10px; }}
+    .arcade-grid {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 15px; }}
+    .card {{ border: 1px solid #00ffe1; padding: 15px; text-align: center; display: flex; flex-direction: column; justify-content: space-between; }}
+    .card h2 {{ font-size: 16px; word-break: break-word; margin: 0 0 15px 0; }}
+    .card a {{ color: #000; background: #00ffe1; padding: 8px 10px; text-decoration: none; font-weight: bold; display: inline-block; }}
 </style>
 </head>
 <body>
     <h1>LUMA_CORE UNIFIED DASHBOARD</h1>
     
     <div class="grid">
-        <!-- DNA ENGINE -->
         <div class="panel">
-            <h2>CPF ArbÃ³reo // AnÃ¡lise GenÃ©tica</h2>
-            <textarea id="dnaInput" rows="3" placeholder="Cole a sequÃªncia (ex: ATGCGATCGTAGCT..."></textarea>
-            <button onclick="analisarDNA()">Analisar SequÃªncia</button>
+            <h2>CPF Arbóreo // Análise Genética</h2>
+            <textarea id="dnaInput" rows="3" placeholder="Cole a sequência (ex: ATGCGATCGTAGCT..."></textarea>
+            <button onclick="analisarDNA()">Analisar Sequência</button>
             <div id="dnaResult" class="result">Aguardando...</div>
         </div>
-
-        <!-- RECOMMENDATION ENGINE -->
         <div class="panel">
             <h2>Spotify Engine // Similaridade Cosseno</h2>
             <input type="text" id="v1" placeholder="Vetor 1 (ex: 1, 2, 3)">
@@ -108,7 +109,6 @@ class Handler(http.server.SimpleHTTPRequestHandler):
         </div>
     </div>
 
-    <!-- ARCADE -->
     <h2 style="margin-top: 40px;">Arcade Local // Sintetizador</h2>
     <div class="arcade-grid">
         {cards}
@@ -195,7 +195,7 @@ class Handler(http.server.SimpleHTTPRequestHandler):
         self.send_response(404); self.end_headers()
 
 socketserver.TCPServer.allow_reuse_address = True
-print(f"[V158 DASHBOARD] Servidor a arrancar em 127.0.0.1:{PORT}...")
 HOST = "0.0.0.0" if os.environ.get("RENDER") or os.environ.get("VERCEL") else "127.0.0.1"
+print(f"[V159 CLOUD] Servidor a arrancar em {HOST}:{PORT}...")
 with socketserver.TCPServer((HOST, PORT), Handler) as httpd:
     httpd.serve_forever()

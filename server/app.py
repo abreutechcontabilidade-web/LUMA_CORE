@@ -122,3 +122,4 @@ print(f"[V159 CLOUD] Servidor a arrancar em {HOST}:{PORT}...")
 with socketserver.TCPServer((HOST, PORT), Handler) as httpd:
     httpd.serve_forever()
 
+

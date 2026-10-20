@@ -1,4 +1,4 @@
-import http.server, socketserver, json, os, sys, re, time, shutil, difflib
+﻿import http.server, socketserver, json, os, sys, re, time, shutil, difflib
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 try:
@@ -131,6 +131,17 @@ class Handler(http.server.SimpleHTTPRequestHandler):
                 self._send_json({"status": "error", "msg": str(e), "fonte": "MINIMAX_LUT"})
             return
 
+        if self.path == "/api/minimax_variant":
+            n = int(self.headers.get('Content-Length', 0))
+            body = json.loads(self.rfile.read(n).decode('utf-8'))
+            board = body.get("board", ['', '', '', '', '', '', '', '', ''])
+            mode = body.get("modo", 0)
+            try:
+                best_move = minimax_micro(board, mode)
+                self._send_json({"status": "success", "best_move": best_move, "modo": mode, "fonte": "MINIMAX_VARIANT"})
+            except Exception as e:
+                self._send_json({"status": "error", "msg": str(e), "fonte": "MINIMAX_VARIANT"})
+            return
         self.send_response(404); self.end_headers()
 
 socketserver.TCPServer.allow_reuse_address = True

@@ -1,0 +1,408 @@
+﻿RELATORIO DE ECOSSISTEMA - LUMA_CORE
+Data: 10/20/2026 16:51:15
+Total de arquivos Python: 275
+==================================================
+Arquivo: \backup_manager.py | Linhas: 16 
+  Funcoes: create_timestamped_backup
+Arquivo: \fix_entity.py | Linhas: 41 [ONNX/NEURAL]
+  Funcoes: extrair_intencao, extrair_features
+Arquivo: \gerador_local.py | Linhas: 38 
+Arquivo: \patch_engine.py | Linhas: 189 [UBER/OPTIMIZATION]
+  Funcoes: __init__, decode_all_entities, handle_comment, handle_decl, handle_starttag, handle_endtag, finalize, find_bounds, _calc_offset, calculate_sha256, find_slot_bounds, apply_patch_transaction
+Arquivo: \sota_master_fix.py | Linhas: 196 [ONNX/NEURAL]
+  Funcoes: extrair_intencao, extrair_features
+Arquivo: \sota_safe_installer.py | Linhas: 127 [ONNX/NEURAL]
+  Funcoes: extrair_intencao, extrair_features, __init__, processar, aprender_da_nuvem
+Arquivo: \sota_transactional_installer.py | Linhas: 225 [ONNX/NEURAL]
+  Funcoes: calc_sha, extrair_intencao, extrair_features
+Arquivo: \sota_ultimate_fix.py | Linhas: 247 [ONNX/NEURAL]
+  Funcoes: extrair_intencao, extrair_features, __init__, processar, aprender_da_nuvem
+Arquivo: \test_backup_and_api_compat.py | Linhas: 116 
+  Funcoes: setUp, tearDown, test_backup_preserves_content_and_sha, test_backup_filename_timestamp_format, test_backup_when_file_does_not_exist, test_public_api_signatures_and_returns, test_exception_status_codes, test_failure_during_mkstemp_leaves_file_intact, test_failure_during_os_replace_cleans_temp_and_preserves_original
+Arquivo: \test_lifo_patch_engine.py | Linhas: 139 
+  Funcoes: base_file, test_lifo_and_rollback
+Arquivo: \test_regression_patch_engine.py | Linhas: 52 
+  Funcoes: setUp, tearDown, _assert_rollback, test_nested_tags_depth_tracking, test_conditional_comments_rejection, test_encoded_entity_uri_schemes, test_malformed_fragments, test_valid_mutation_success
+Arquivo: \_check_mem.py | Linhas: 9 
+Arquivo: \_clean.py | Linhas: 12 
+Arquivo: \_clean_final.py | Linhas: 4 
+Arquivo: \_clean_pf58.py | Linhas: 12 
+Arquivo: \_clean_snake.py | Linhas: 15 
+Arquivo: \_clean_v100.py | Linhas: 12 
+Arquivo: \_clean_v106.py | Linhas: 12 
+Arquivo: \_clean_v107.py | Linhas: 12 
+Arquivo: \_clean_v108.py | Linhas: 12 
+Arquivo: \_clean_v109.py | Linhas: 12 
+Arquivo: \_clean_v120.py | Linhas: 16 
+Arquivo: \_clean_v121.py | Linhas: 12 
+Arquivo: \_clean_v125.py | Linhas: 12 
+Arquivo: \_clean_v126.py | Linhas: 12 
+Arquivo: \_clean_v128.py | Linhas: 6 
+Arquivo: \_clean_v129.py | Linhas: 5 
+Arquivo: \_clean_v131.py | Linhas: 4 
+Arquivo: \_clean_v134.py | Linhas: 4 
+Arquivo: \_clean_v135.py | Linhas: 4 
+Arquivo: \_clean_v137.py | Linhas: 4 
+Arquivo: \_clean_v3.py | Linhas: 12 
+Arquivo: \_clean_v94.py | Linhas: 13 
+Arquivo: \_fix_app_filter_v88.py | Linhas: 32 [ONNX/NEURAL]
+Arquivo: \_fix_app_v129.py | Linhas: 31 
+Arquivo: \_fix_app_v130.py | Linhas: 34 
+Arquivo: \_fix_app_v131.py | Linhas: 34 
+Arquivo: \_fix_app_v133.py | Linhas: 31 
+Arquivo: \_fix_app_v134.py | Linhas: 31 
+Arquivo: \_fix_app_v135.py | Linhas: 31 
+Arquivo: \_fix_async_v95.py | Linhas: 51 [ONNX/NEURAL]
+Arquivo: \_fix_autopoiese_v116.py | Linhas: 45 
+Arquivo: \_fix_block_v103.py | Linhas: 37 [ONNX/NEURAL]
+Arquivo: \_fix_bypass_v119.py | Linhas: 37 [UBER/OPTIMIZATION]
+Arquivo: \_fix_canvas_v102.py | Linhas: 43 
+Arquivo: \_fix_canvas_v1_4.py | Linhas: 59 
+Arquivo: \_fix_css_nuclear.py | Linhas: 59 
+Arquivo: \_fix_css_ultimate_v105.py | Linhas: 65 
+Arquivo: \_fix_cto_final_v100.py | Linhas: 126 [UBER/OPTIMIZATION]
+  Funcoes: aplicar_mutacoes
+Arquivo: \_fix_cto_v101.py | Linhas: 44 [UBER/OPTIMIZATION, ONNX/NEURAL]
+Arquivo: \_fix_deadlock_v112.py | Linhas: 41 [CPF_ARBOREO/QUEUE, ONNX/NEURAL]
+Arquivo: \_fix_dynamic_v98.py | Linhas: 107 
+  Funcoes: aplicar_mutacoes
+Arquivo: \_fix_edicao_v94.py | Linhas: 65 [ONNX/NEURAL]
+Arquivo: \_fix_entrega_v94.py | Linhas: 35 [ONNX/NEURAL]
+Arquivo: \_fix_espelho_v104.py | Linhas: 48 [ONNX/NEURAL]
+Arquivo: \_fix_fantasma_v113.py | Linhas: 44 [CPF_ARBOREO/QUEUE, ONNX/NEURAL]
+Arquivo: \_fix_fantasma_v114.py | Linhas: 48 [CPF_ARBOREO/QUEUE, ONNX/NEURAL]
+  Funcoes: inferir_mutacao
+Arquivo: \_fix_final_safe.py | Linhas: 53 [ONNX/NEURAL]
+  Funcoes: compila
+Arquivo: \_fix_final_v109.py | Linhas: 46 [ONNX/NEURAL]
+  Funcoes: compila
+Arquivo: \_fix_final_v110.py | Linhas: 88 
+  Funcoes: compila, limpa_e_injeta, escopo_tem_prompt, gravar_se_compila
+Arquivo: \_fix_final_v111.py | Linhas: 38 [ONNX/NEURAL]
+  Funcoes: inferir_mutacao
+Arquivo: \_fix_final_v117.py | Linhas: 37 
+Arquivo: \_fix_final_v120.py | Linhas: 43 [UBER/OPTIMIZATION]
+Arquivo: \_fix_final_v93.py | Linhas: 73 [ONNX/NEURAL]
+  Funcoes: _atualizar_genoma, _tarefa_nuvem, _tarefa_web, aprender_em_segundo_plano
+Arquivo: \_fix_g138.py | Linhas: 20 [ONNX/NEURAL]
+Arquivo: \_fix_gate22_v84.py | Linhas: 206 [UBER/OPTIMIZATION]
+  Funcoes: get_token, descarregar_asset, inlinar_dependencias, replace_css, replace_js, aprender_do_github, self_test
+Arquivo: \_fix_github_v118.py | Linhas: 33 
+Arquivo: \_fix_inline_v102.py | Linhas: 39 [ONNX/NEURAL]
+Arquivo: \_fix_intent_v87.py | Linhas: 272 [UBER/OPTIMIZATION, ONNX/NEURAL]
+  Funcoes: extrair_chave, buscar_no_genoma, get_token, descarregar_asset, inlinar_dependencias, replace_css, replace_js, aprender_do_github, gerar_esqueleto_local, analisar_e_evoluir, processar_sintese
+Arquivo: \_fix_knowledge_mapper_v86.py | Linhas: 82 [ONNX/NEURAL]
+  Funcoes: abastecer_genoma
+Arquivo: \_fix_nivel05_v94.py | Linhas: 68 [UBER/OPTIMIZATION, ONNX/NEURAL]
+Arquivo: \_fix_nuclear_v106.py | Linhas: 48 [ONNX/NEURAL]
+  Funcoes: compila
+Arquivo: \_fix_pf50b_v99.py | Linhas: 91 
+  Funcoes: aplicar_mutacoes
+Arquivo: \_fix_real_v115.py | Linhas: 56 [ONNX/NEURAL]
+  Funcoes: inferir_mutacao
+Arquivo: \_fix_regex_v100.py | Linhas: 41 [UBER/OPTIMIZATION, ONNX/NEURAL]
+  Funcoes: inject_mutator
+Arquivo: \_fix_safe_v95.py | Linhas: 42 [UBER/OPTIMIZATION, ONNX/NEURAL]
+  Funcoes: replacer
+Arquivo: \_fix_safe_v96.py | Linhas: 70 [ONNX/NEURAL]
+Arquivo: \_fix_stilb_cache_v2.py | Linhas: 37 [ONNX/NEURAL]
+Arquivo: \_fix_strict_match_v90.py | Linhas: 69 [UBER/OPTIMIZATION, ONNX/NEURAL]
+  Funcoes: extrair_chave, buscar_no_genoma
+Arquivo: \_fix_surgical_v101.py | Linhas: 45 [UBER/OPTIMIZATION, ONNX/NEURAL]
+Arquivo: \_fix_t66_v89.py | Linhas: 92 [UBER/OPTIMIZATION, ONNX/NEURAL]
+  Funcoes: extrair_chave, buscar_no_genoma
+Arquivo: \_fix_v10.py | Linhas: 53 [ONNX/NEURAL]
+  Funcoes: compila
+Arquivo: \_fix_v107.py | Linhas: 49 [ONNX/NEURAL]
+Arquivo: \_fix_v95_final.py | Linhas: 66 [UBER/OPTIMIZATION, ONNX/NEURAL]
+Arquivo: \_healer_indent.py | Linhas: 47 [ONNX/NEURAL]
+  Funcoes: extrair_intencao, extrair_features
+Arquivo: \_ingest_tetris.py | Linhas: 31 
+Arquivo: \_inject_key.py | Linhas: 41 [UBER/OPTIMIZATION]
+Arquivo: \_inject_key_and_fix_path.py | Linhas: 128 [UBER/OPTIMIZATION]
+  Funcoes: __init__, load_keys, get_key, mark_dead
+Arquivo: \_inject_sota_game.py | Linhas: 181 
+Arquivo: \_inspect_raw.py | Linhas: 41 
+Arquivo: \_inspect_vault.py | Linhas: 17 
+Arquivo: \_integrate_engine.py | Linhas: 135 [ONNX/NEURAL]
+  Funcoes: do_POST
+Arquivo: \_integrator_engine.py | Linhas: 131 [ONNX/NEURAL]
+Arquivo: \_integrator_final.py | Linhas: 123 [ONNX/NEURAL]
+Arquivo: \_patch_action_v2.py | Linhas: 62 
+Arquivo: \_patch_always_save.py | Linhas: 0 
+Arquivo: \_patch_app_scaffold.py | Linhas: 123 [UBER/OPTIMIZATION]
+Arquivo: \_patch_aprendiz_v14.py | Linhas: 41 [UBER/OPTIMIZATION, ONNX/NEURAL]
+Arquivo: \_patch_aria_sota.py | Linhas: 71 
+  Funcoes: _abrir_sota, worker, _abrir_pasta
+Arquivo: \_patch_cure_app.py | Linhas: 56 [ONNX/NEURAL]
+Arquivo: \_patch_cure_v58.py | Linhas: 48 
+Arquivo: \_patch_dicionario.py | Linhas: 43 
+Arquivo: \_patch_early_return.py | Linhas: 48 
+Arquivo: \_patch_early_return_v2.py | Linhas: 73 
+Arquivo: \_patch_features_app.py | Linhas: 90 
+Arquivo: \_patch_features_onnx.py | Linhas: 103 [ONNX/NEURAL]
+  Funcoes: __init__, _load_dynamic_tools, processar, aprender_da_nuvem
+Arquivo: \_patch_filter.py | Linhas: 43 
+Arquivo: \_patch_final_v48.py | Linhas: 244 [ONNX/NEURAL]
+  Funcoes: extrair_chave_estavel, extrair_features, carregar_memoria, guardar_memoria, higienizar_miolo, __init__, processar, aprender_da_nuvem, _gerar_jogo_da_velha, _gerar_calculadora_cientifica
+Arquivo: \_patch_fixnames.py | Linhas: 96 [ONNX/NEURAL]
+  Funcoes: processar
+Arquivo: \_patch_force_mutation.py | Linhas: 68 [UBER/OPTIMIZATION, ONNX/NEURAL]
+  Funcoes: processar
+Arquivo: \_patch_frame.py | Linhas: 67 
+Arquivo: \_patch_funcao.py | Linhas: 33 [UBER/OPTIMIZATION]
+  Funcoes: extrair_chave
+Arquivo: \_patch_gold.py | Linhas: 36 
+Arquivo: \_patch_hooks.py | Linhas: 32 [ONNX/NEURAL]
+  Funcoes: _gerar_calculadora_cientifica
+Arquivo: \_patch_hooks_v37.py | Linhas: 34 [ONNX/NEURAL]
+Arquivo: \_patch_import_v51.py | Linhas: 139 [ONNX/NEURAL]
+Arquivo: \_patch_injection.py | Linhas: 125 
+  Funcoes: inject_feature
+Arquivo: \_patch_injector_app.py | Linhas: 115 
+Arquivo: \_patch_intent.py | Linhas: 71 [ONNX/NEURAL]
+  Funcoes: extrair_intencao, processar, aprender_da_nuvem
+Arquivo: \_patch_iterative.py | Linhas: 130 
+Arquivo: \_patch_keyring.py | Linhas: 46 [ONNX/NEURAL]
+Arquivo: \_patch_mem_priority.py | Linhas: 102 [ONNX/NEURAL]
+  Funcoes: extrair_intencao, processar
+Arquivo: \_patch_modifier.py | Linhas: 94 
+Arquivo: \_patch_mutator.py | Linhas: 65 
+Arquivo: \_patch_nofilter.py | Linhas: 36 
+Arquivo: \_patch_onnx_tools.py | Linhas: 102 [UBER/OPTIMIZATION, ONNX/NEURAL]
+  Funcoes: _gerar_cronometro, _gerar_forca, _gerar_calculadora_cientifica
+Arquivo: \_patch_onnx_v13.py | Linhas: 156 [UBER/OPTIMIZATION, ONNX/NEURAL]
+  Funcoes: _gerar_calculadora_cientifica, _gerar_jogo_da_velha_premium, processar
+Arquivo: \_patch_plural.py | Linhas: 25 
+Arquivo: \_patch_pos_app.py | Linhas: 58 
+Arquivo: \_patch_pos_feature.py | Linhas: 38 
+Arquivo: \_patch_priority.py | Linhas: 86 [ONNX/NEURAL]
+  Funcoes: processar
+Arquivo: \_patch_restore_vigia.py | Linhas: 61 [ONNX/NEURAL]
+Arquivo: \_patch_safe_return.py | Linhas: 0 
+Arquivo: \_patch_scaffold_fix.py | Linhas: 141 [ONNX/NEURAL]
+  Funcoes: extrair_intencao
+Arquivo: \_patch_scaffold_force.py | Linhas: 54 
+Arquivo: \_patch_slot_app.py | Linhas: 135 [ONNX/NEURAL]
+Arquivo: \_patch_sota_app.py | Linhas: 123 [ONNX/NEURAL]
+Arquivo: \_patch_subset.py | Linhas: 68 [UBER/OPTIMIZATION, ONNX/NEURAL]
+  Funcoes: processar
+Arquivo: \_patch_synonyms.py | Linhas: 34 
+Arquivo: \_patch_unify_onnx.py | Linhas: 62 [ONNX/NEURAL]
+  Funcoes: extrair_intencao, processar
+Arquivo: \_patch_v155.py | Linhas: 33 [MINIMAX/AI]
+Arquivo: \_patch_v40.py | Linhas: 83 
+Arquivo: \_patch_v47.py | Linhas: 117 
+Arquivo: \_patch_v55_app.py | Linhas: 161 [ONNX/NEURAL]
+Arquivo: \_patch_v57_auto.py | Linhas: 46 
+Arquivo: \_patch_v59_app.py | Linhas: 31 
+Arquivo: \_patch_v59_onnx.py | Linhas: 74 [ONNX/NEURAL]
+  Funcoes: processar
+Arquivo: \_patch_v61.py | Linhas: 143 [UBER/OPTIMIZATION]
+Arquivo: \_pf53_rescue.py | Linhas: 28 
+  Funcoes: compila
+Arquivo: \_pf54_clean.py | Linhas: 15 
+Arquivo: \_pf54_patcher.py | Linhas: 78 [ONNX/NEURAL]
+  Funcoes: compila, escopo_tem_prompt
+Arquivo: \_pf55_limpar.py | Linhas: 54 [ONNX/NEURAL]
+  Funcoes: compila
+Arquivo: \_pf55_patcher.py | Linhas: 76 [ONNX/NEURAL]
+  Funcoes: compila, escopo_tem_prompt
+Arquivo: \_pf55_rescue.py | Linhas: 22 
+  Funcoes: compila
+Arquivo: \_pf55_smoke.py | Linhas: 10 
+Arquivo: \_pf56_censo.py | Linhas: 20 
+Arquivo: \_pf56_patcher.py | Linhas: 104 
+  Funcoes: compila, limpa_e_injeta, escopo_tem_prompt, gravar_se_compila
+Arquivo: \_pf56_smoke.py | Linhas: 19 
+  Funcoes: boom
+Arquivo: \_pf57_patcher.py | Linhas: 96 [UBER/OPTIMIZATION, ONNX/NEURAL]
+  Funcoes: compila
+Arquivo: \_pf58_censo.py | Linhas: 36 
+Arquivo: \_pf58_final.py | Linhas: 32 [ONNX/NEURAL]
+Arquivo: \_pf58_patcher.py | Linhas: 54 
+  Funcoes: _resolvivel
+Arquivo: \_pf60_patcher.py | Linhas: 61 
+  Funcoes: extrair_chave
+Arquivo: \_pf63_censo.py | Linhas: 43 [UBER/OPTIMIZATION, ONNX/NEURAL]
+Arquivo: \_pf63_learner_patcher.py | Linhas: 15 
+Arquivo: \_pf63_patcher.py | Linhas: 12 
+Arquivo: \_pf63_quarentena.py | Linhas: 18 
+Arquivo: \_purge_cache.py | Linhas: 6 [ONNX/NEURAL]
+Arquivo: \_quantum_healer.py | Linhas: 61 [ONNX/NEURAL]
+  Funcoes: extrair_intencao, extrair_features
+Arquivo: \_refactor_sota.py | Linhas: 233 [UBER/OPTIMIZATION, ONNX/NEURAL]
+  Funcoes: _send_json, do_OPTIONS, do_GET, do_POST
+Arquivo: \_restaurar_app.py | Linhas: 14 
+Arquivo: \_restore_stilb_v97.py | Linhas: 130 [ONNX/NEURAL]
+  Funcoes: aplicar_mutacoes
+Arquivo: \_safe_integrator.py | Linhas: 121 [ONNX/NEURAL]
+Arquivo: \_sota_absolute_fix.py | Linhas: 85 [ONNX/NEURAL]
+  Funcoes: extrair_intencao, extrair_features
+Arquivo: \_sota_fix_final.py | Linhas: 87 [ONNX/NEURAL]
+  Funcoes: extrair_intencao, extrair_features
+Arquivo: \_test_calor_v2.py | Linhas: 16 
+Arquivo: \_test_cloud_feature.py | Linhas: 20 
+Arquivo: \_test_hw.py | Linhas: 7 
+Arquivo: \_test_hw_final.py | Linhas: 10 
+Arquivo: \_test_hw_gamma.py | Linhas: 10 
+Arquivo: \_test_hw_native.py | Linhas: 10 
+Arquivo: \_test_hw_vcp.py | Linhas: 10 
+Arquivo: \_test_onnx_sota.py | Linhas: 33 [ONNX/NEURAL]
+Arquivo: \_test_patch_engine.py | Linhas: 141 
+  Funcoes: check
+Arquivo: \_test_ring.py | Linhas: 11 
+Arquivo: \_test_slot_engine.py | Linhas: 22 
+Arquivo: \core\audit.py | Linhas: 30 
+  Funcoes: __init__, commit, read_last
+Arquivo: \core\cortex.py | Linhas: 24 
+  Funcoes: avaliar_bioritmo
+Arquivo: \core\event_bus.py | Linhas: 24 
+  Funcoes: __init__, subscribe, publish, history
+Arquivo: \core\hardware.py | Linhas: 69 
+  Funcoes: _build_ramp, _apply, alterar_brilho, alterar_calor, ler_status_hardware
+Arquivo: \core\reflexo.py | Linhas: 97 
+  Funcoes: log, avaliar_regra, aplicar_patch, correr
+Arquivo: \core\safety.py | Linhas: 14 
+  Funcoes: check
+Arquivo: \core\state.py | Linhas: 25 
+  Funcoes: __init__, update
+Arquivo: \core\telemetry.py | Linhas: 87 
+  Funcoes: _cpu, _memory, _disk, _uptime, coletar
+Arquivo: \core\vigia.py | Linhas: 40 
+  Funcoes: __init__, _loop, start, stop, last
+Arquivo: \core\__init__.py | Linhas: 1 
+Arquivo: \core\raw\raw_cortex.py | Linhas: 626 
+  Funcoes: __init__, _ms, _clean, parse_fasta, gc_percent, shannon_entropy, _entropy_from_counts, _assess_dna_state, _looks_like_fastq, _scan_orfs_strand, _fallback_orfs, _tax_hint, _pista_para, illuminate_sequence, illuminate_file, _analyze_dna, _stream_fasta_large, _analyze_fastq, _stream_fastq_file, _finalize_fastq, _analyze_plddt, _sign, verify_hash
+Arquivo: \core\raw\raw_hardware.py | Linhas: 1225 [UBER/OPTIMIZATION, CPF_ARBOREO/QUEUE]
+  Funcoes: rampa_identidade, _rampa_monotona, _tentar, construir_ramp, aplicar_gamma, _enum_fisicos, cb, ddc_ler, __init__, run, idle_segundos, app_ativo, ler_bateria, __call__, fundir, curva_ascii, escolhe, feedback, observa, preve, dump, reset, transicao_em_curso, transicionar, _passos, registrar_uso, registrar_pausa, registrar_ruido, diagnosticar, detectar_ip_thread, carregar_cfg, salvar_cfg, log_aria, definir_autostart, nascer_poser, encerrar, prefixo, _icone, definir, barra, rot, sld, _atualizar_lbl_perfil, _preset_idx, _mudanca, preset, _salvar_depois, _salvar_agora, _cusum_perguntar, resetar, _eh_noite, _alvo_fundido, _aria_aplicar_alvo, _aria_status, _toggle_aria, _tick_geral, _porque_janela, _cerebro_janela, atualizar, esquecer, _circa_janela, _guia_janela, linha, _exportar, _abrir_pasta, _calibrar, _aplicar_lat, _cidade_enter, _pedir_ip, _ip_resultado, _iniciar_atalhos, _parar_atalhos, _legenda_atalhos, _poll, _distribuir, _acao_atalho, _osd, _alternar_janela, _toggle_atalhos, _toggle_windows, _toggle_noite, _montar_tray, mk, _fechar_janela, sair_total
+Arquivo: \intelligence\background_learner.py | Linhas: 56 [ONNX/NEURAL]
+  Funcoes: _atualizar_genoma, _tarefa_nuvem, _tarefa_web, aprender_em_segundo_plano
+Arquivo: \intelligence\cure_engine.py | Linhas: 8 
+  Funcoes: higienizar_miolo
+Arquivo: \intelligence\direct_web_connector.py | Linhas: 50 
+  Funcoes: ligar_a_web
+Arquivo: \intelligence\dom_parser.py | Linhas: 26 
+  Funcoes: __init__, handle_starttag, ler_miolo
+Arquivo: \intelligence\fallback.py | Linhas: 148 [UBER/OPTIMIZATION]
+  Funcoes: carregar_vault, _pendente_recente, _gerar_gemini, _gerar_openai_compat, _gerar_anthropic, gerar_com_fallback
+Arquivo: \intelligence\feature_engine.py | Linhas: 24 
+  Funcoes: carregar_memoria, guardar_memoria, extrair_intencao, extrair_features
+Arquivo: \intelligence\github_game_search.py | Linhas: 43 
+  Funcoes: search_game_repo
+Arquivo: \intelligence\github_learner.py | Linhas: 49 
+  Funcoes: aprender_do_github
+Arquivo: \intelligence\injector_engine.py | Linhas: 54 
+  Funcoes: detectar_posicao, extrair_feature, injetar_feature
+Arquivo: \intelligence\key_detector.py | Linhas: 124 [UBER/OPTIMIZATION]
+  Funcoes: detetar_provider, candidatos_para_ambiguo, candidatos_para_gemini, resolver
+Arquivo: \intelligence\key_ring.py | Linhas: 53 
+  Funcoes: __init__, load_keys, get_key, mark_dead
+Arquivo: \intelligence\knowledge_mapper.py | Linhas: 62 [ONNX/NEURAL]
+  Funcoes: abastecer_genoma
+Arquivo: \intelligence\local_synthesis.py | Linhas: 35 
+  Funcoes: gerar_esqueleto_local, analisar_e_evoluir, processar_sintese
+Arquivo: \intelligence\local_synthesizer.py | Linhas: 53 
+  Funcoes: synthesize_calculator
+Arquivo: \intelligence\luma_patch.py | Linhas: 96 
+  Funcoes: aplicar_edits, validar, carregar_regra, main
+Arquivo: \intelligence\model_discovery.py | Linhas: 196 
+  Funcoes: _classificar_erro, _testar_google_genai, _testar_openai_compat, _testar_anthropic, _testar_gemini_dual, _testar_provider_direto, resolver_chave
+Arquivo: \intelligence\mutador_local_v1.py | Linhas: 52 
+  Funcoes: aplicar_mutacoes
+Arquivo: \intelligence\mutador_stilb_v1.py | Linhas: 82 [UBER/OPTIMIZATION]
+  Funcoes: _inject, aplicar_mutacoes, _stilb_mutar_seguro
+Arquivo: \intelligence\onnx_bridge.py | Linhas: 2 
+  Funcoes: inferir_mutacao
+Arquivo: \intelligence\onnx_sota.py | Linhas: 186 [UBER/OPTIMIZATION, ONNX/NEURAL]
+  Funcoes: _norm, _match, detectar_intencao, detectar_features, detectar_posicoes, detectar_modificadores, compor_chave, inspecionar, adicionar_intencao, adicionar_feature, adicionar_posicao
+Arquivo: \intelligence\onnx_sovereign.py | Linhas: 37 
+  Funcoes: extrair_chave, buscar_no_genoma
+Arquivo: \intelligence\patch_engine.py | Linhas: 64 [UBER/OPTIMIZATION]
+  Funcoes: aplicar_patch_tetris_avancado
+Arquivo: \intelligence\providers.py | Linhas: 119 [UBER/OPTIMIZATION]
+  Funcoes: listar_providers, obter_provider, info
+Arquivo: \intelligence\sintetizador_local.py | Linhas: 45 [MINIMAX/AI]
+  Funcoes: carregar_genoma, sintetizar_jogo
+Arquivo: \intelligence\slot_engine.py | Linhas: 111 [UBER/OPTIMIZATION]
+  Funcoes: validar_delta, _substituir_inner, _adicionar_inner, _adicionar_css, _adicionar_js, aplicar_delta
+Arquivo: \intelligence\swarm_engine.py | Linhas: 61 [UBER/OPTIMIZATION]
+  Funcoes: _bater_chave, disparar_enxame
+Arquivo: \intelligence\virtual_onnx.py | Linhas: 31 [ONNX/NEURAL]
+  Funcoes: __init__, processar, aprender_da_nuvem
+Arquivo: \intelligence\web_learner.py | Linhas: 39 
+  Funcoes: pesquisar_na_web
+Arquivo: \intelligence\_genoma_writer.py | Linhas: 116 [MINIMAX/AI]
+Arquivo: \server\app.py | Linhas: 217 [MINIMAX/AI, UBER/OPTIMIZATION]
+  Funcoes: extrair_chave, _gate33_validar, caminho_da_chave, cache_ler, cache_gravar, log_message, translate_path, _send_json, do_GET, do_POST
+Arquivo: \_archive\_clean_genome.py | Linhas: 13 
+Arquivo: \_archive\_fix_and_boot.py | Linhas: 45 
+Arquivo: \_archive\_fix_app_keyring.py | Linhas: 24 
+Arquivo: \_archive\_fix_app_sensei.py | Linhas: 39 
+Arquivo: \_archive\_fix_aprender_github.py | Linhas: 139 [ONNX/NEURAL]
+  Funcoes: aprender_do_github, inferir_mutacao, aplicar_mutacoes
+Arquivo: \_archive\_fix_autopoiese_v2.py | Linhas: 46 [ONNX/NEURAL]
+Arquivo: \_archive\_fix_autopoiese_v68.py | Linhas: 204 [SPOTIFY/RECOMMENDATION, UBER/OPTIMIZATION, ONNX/NEURAL]
+  Funcoes: buscar_no_genoma, gerar_esqueleto_local, analisar_e_evoluir, processar_sintese
+Arquivo: \_archive\_fix_background_v71.py | Linhas: 212 [UBER/OPTIMIZATION, ONNX/NEURAL]
+  Funcoes: _atualizar_genoma, _tarefa_nuvem, _tarefa_web, aprender_em_segundo_plano
+Arquivo: \_archive\_fix_base_html.py | Linhas: 60 
+Arquivo: \_archive\_fix_cache_fallback.py | Linhas: 53 
+Arquivo: \_archive\_fix_cobra_final_v77.py | Linhas: 129 [ONNX/NEURAL]
+  Funcoes: inferir_mutacao, aplicar_mutacoes, aprender_do_github
+Arquivo: \_archive\_fix_cors.py | Linhas: 42 
+  Funcoes: do_OPTIONS, do_POST
+Arquivo: \_archive\_fix_dict.py | Linhas: 31 
+Arquivo: \_archive\_fix_direct_web_v72.py | Linhas: 107 
+  Funcoes: ligar_a_web
+Arquivo: \_archive\_fix_direct_web_v73.py | Linhas: 91 
+  Funcoes: ligar_a_web
+Arquivo: \_archive\_fix_discernimento_v75.py | Linhas: 103 [ONNX/NEURAL]
+  Funcoes: inferir_mutacao, aplicar_mutacoes
+Arquivo: \_archive\_fix_final_v65.py | Linhas: 208 [UBER/OPTIMIZATION]
+  Funcoes: analisar_e_evoluir, processar_sintese
+Arquivo: \_archive\_fix_github_offline_v77.py | Linhas: 138 
+  Funcoes: aprender_do_github
+Arquivo: \_archive\_fix_hard.py | Linhas: 119 [UBER/OPTIMIZATION]
+Arquivo: \_archive\_fix_import_cure.py | Linhas: 48 
+Arquivo: \_archive\_fix_import_final.py | Linhas: 39 [ONNX/NEURAL]
+Arquivo: \_archive\_fix_import_sensei.py | Linhas: 27 [ONNX/NEURAL]
+  Funcoes: extrair_intencao, extrair_features
+Arquivo: \_archive\_fix_import_v38.py | Linhas: 45 
+Arquivo: \_archive\_fix_inliner_v80.py | Linhas: 158 [UBER/OPTIMIZATION]
+  Funcoes: get_token, descarregar_asset, inlinar_dependencias, replace_css, replace_js, aprender_do_github
+Arquivo: \_archive\_fix_inliner_v81.py | Linhas: 158 [UBER/OPTIMIZATION]
+  Funcoes: get_token, descarregar_asset, inlinar_dependencias, replace_css, replace_js, aprender_do_github
+Arquivo: \_archive\_fix_inliner_v81_corrigido.py | Linhas: 159 [UBER/OPTIMIZATION]
+  Funcoes: get_token, descarregar_asset, inlinar_dependencias, replace_css, replace_js, aprender_do_github
+Arquivo: \_archive\_fix_inliner_v82.py | Linhas: 199 [UBER/OPTIMIZATION]
+  Funcoes: get_token, descarregar_asset, inlinar_dependencias, replace_css, replace_js, aprender_do_github
+Arquivo: \_archive\_fix_json.py | Linhas: 44 
+  Funcoes: _send_json
+Arquivo: \_archive\_fix_main.py | Linhas: 40 
+Arquivo: \_archive\_fix_main_v61.py | Linhas: 47 
+Arquivo: \_archive\_fix_nucleo_v66.py | Linhas: 87 [UBER/OPTIMIZATION, ONNX/NEURAL]
+Arquivo: \_archive\_fix_onnx_import.py | Linhas: 25 [ONNX/NEURAL]
+  Funcoes: extrair_intencao, extrair_features
+Arquivo: \_archive\_fix_onnx_sensei.py | Linhas: 56 [ONNX/NEURAL]
+  Funcoes: processar, aprender_da_nuvem
+Arquivo: \_archive\_fix_onnx_sovereign.py | Linhas: 174 [SPOTIFY/RECOMMENDATION, UBER/OPTIMIZATION, ONNX/NEURAL]
+  Funcoes: obter_vetor, similaridade_cosseno, buscar_no_genoma
+Arquivo: \_archive\_fix_onnx_sovereign_puro.py | Linhas: 166 [SPOTIFY/RECOMMENDATION, UBER/OPTIMIZATION, ONNX/NEURAL]
+  Funcoes: obter_vetor, similaridade_cosseno, buscar_no_genoma
+Arquivo: \_archive\_fix_path_and_key.py | Linhas: 74 
+Arquivo: \_archive\_fix_route_v63.py | Linhas: 143 [UBER/OPTIMIZATION]
+Arquivo: \_archive\_fix_server.py | Linhas: 29 
+Arquivo: \_archive\_fix_smart_cache.py | Linhas: 51 [UBER/OPTIMIZATION]
+Arquivo: \_archive\_fix_super_web_learner.py | Linhas: 154 [ONNX/NEURAL]
+  Funcoes: pesquisar_na_web, inferir_mutacao, aplicar_mutacoes
+Arquivo: \_archive\_fix_swarm.py | Linhas: 75 
+Arquivo: \_archive\_fix_synthesis.py | Linhas: 36 [UBER/OPTIMIZATION]
+Arquivo: \_archive\_fix_t63_definitivo.py | Linhas: 173 [UBER/OPTIMIZATION, ONNX/NEURAL]
+  Funcoes: self_test_tokenizador, buscar_no_genoma
+Arquivo: \_archive\_fix_v47_final.py | Linhas: 152 
+Arquivo: \_archive\_fix_v64_gates.py | Linhas: 162 [UBER/OPTIMIZATION]
+Arquivo: \_archive\_fix_web_final.py | Linhas: 79 
+  Funcoes: ligar_a_web
+Arquivo: \_archive\_fix_web_learner_v70.py | Linhas: 257 [UBER/OPTIMIZATION, ONNX/NEURAL]
+  Funcoes: inferir_mutacao, aplicar_mutacoes, pesquisar_na_web

@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8"><title>Jogo Sintetizado</title><style>body{background:#050510;color:#00ffe1;font-family:monospace;display:flex;justify-content:center;align-items:center;height:100vh;margin:0;}canvas{border:2px solid #00ffe1;box-shadow:0 0 20px #00ffe1;}</style></head>
+<body><canvas id="game" width="800" height="500"></canvas>
+<script>
+const canvas=document.getElementById('game');const ctx=canvas.getContext('2d');
+let state='start';let hp=100;
+addEventListener('keydown',e=>{if(e.key==='1'){hp-=10;state='attacked';}if(e.key==='2'){hp=Math.min(100,hp+10);state='healed';}});
+
+function draw(){ctx.fillStyle='#0a0a1a';ctx.fillRect(0,0,800,500);ctx.fillStyle='#00ffe1';ctx.font='20px monospace';ctx.fillText('Cyberpunk RPG - HP: '+hp, 50, 50);if(state==='start'){ctx.fillText('A wild ICE daemon appears!', 50, 100);ctx.fillText('Press 1 to Attack, 2 to Heal', 50, 150);}else if(state==='attacked'){ctx.fillText('You attacked the daemon! -10 HP', 50, 100);}else{ctx.fillText('You healed yourself! +10 HP', 50, 100);}}
+function update(t=0){draw();requestAnimationFrame(update);}
+update();
+</script></body></html>

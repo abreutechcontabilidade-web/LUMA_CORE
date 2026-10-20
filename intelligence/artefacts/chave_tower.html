@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8"><title>Jogo Sintetizado</title><style>body{background:#050510;color:#00ffe1;font-family:monospace;display:flex;justify-content:center;align-items:center;height:100vh;margin:0;}canvas{border:2px solid #00ffe1;box-shadow:0 0 20px #00ffe1;}</style></head>
+<body><canvas id="game" width="800" height="500"></canvas>
+<script>
+const canvas=document.getElementById('game');const ctx=canvas.getContext('2d');
+let towers=[];let enemiesTD=[];let hp=100;
+canvas.addEventListener('click',e=>{let rect=canvas.getBoundingClientRect();let mx=e.clientX-rect.left,my=e.clientY-rect.top;towers.push({x:mx-20,y:my-20});});
+
+function draw(){ctx.fillStyle='#0a0a1a';ctx.fillRect(0,0,800,500);ctx.fillStyle='#fff';ctx.font='20px monospace';ctx.fillText('HP: '+hp,20,40);towers.forEach(t=>{ctx.fillStyle='#00ffe1';ctx.fillRect(t.x,t.y,40,40);});if(Math.random()<0.02)enemiesTD.push({x:800,y:Math.random()*400+50,hp:3});enemiesTD.forEach(e=>{ctx.fillStyle='#ff2fd6';ctx.fillRect(e.x,e.y,30,30);e.x-=1.5;towers.forEach(t=>{if(e.x>t.x&&e.x<t.x+40&&e.y>t.y&&e.y<t.y+40){e.hp-=0.1;}});if(e.hp<=0)e.x=-100;if(e.x<0){hp-=10;e.x=-100;}});enemiesTD=enemiesTD.filter(e=>e.x>-50);}
+function update(t=0){draw();requestAnimationFrame(update);}
+update();
+</script></body></html>

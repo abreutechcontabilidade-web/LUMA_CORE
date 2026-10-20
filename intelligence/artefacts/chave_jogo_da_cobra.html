@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head><meta charset="UTF-8"><title>Cyberpunk Snake</title>
+<style>
+    body { background: #050510; color: #00ffe1; font-family: 'Courier New', monospace; display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+    canvas { border: 2px solid #00ffe1; box-shadow: 0 0 20px #00ffe1; background: #0a0a1a; }
+    #score { font-size: 24px; text-shadow: 0 0 10px #00ffe1; margin-bottom: 20px; }
+</style>
+</head>
+<body>
+<div id="score">SCORE: 0</div>
+<canvas id="game" width="400" height="400"></canvas>
+<script>
+    const canvas = document.getElementById('game'), ctx = canvas.getContext('2d');
+    const grid = 20, tile = 400 / grid;
+    let snake = [{x: 10, y: 10}], vel = {x: 1, y: 0}, apple = {x: 15, y: 15}, score = 0, speed = 100, last = 0, drop = 0;
+    function update(time = 0) {
+        drop += time - last; last = time;
+        if (drop > speed) { drop = 0; move(); }
+        draw(); requestAnimationFrame(update);
+    }
+    function move() {
+        let head = {x: snake[0].x + vel.x, y: snake[0].y + vel.y};
+        if (head.x < 0) head.x = grid-1; if (head.x >= grid) head.x = 0;
+        if (head.y < 0) head.y = grid-1; if (head.y >= grid) head.y = 0;
+        snake.unshift(head);
+        if (head.x === apple.x && head.y === apple.y) { score += 10; document.getElementById('score').innerText = 'SCORE: ' + score; speed = Math.max(40, speed - 2); place(); }
+        else snake.pop();
+    }
+    function draw() {
+        ctx.fillStyle = '#0a0a1a'; ctx.fillRect(0, 0, 400, 400);
+        snake.forEach((p, i) => { ctx.fillStyle = i === 0 ? '#fff' : '#ff2fd6'; ctx.shadowBlur = 10; ctx.shadowColor = '#ff2fd6'; ctx.fillRect(p.x*tile, p.y*tile, tile-2, tile-2); });
+        ctx.fillStyle = '#00ffe1'; ctx.shadowColor = '#00ffe1'; ctx.beginPath(); ctx.arc(apple.x*tile+tile/2, apple.y*tile+tile/2, tile/2-2, 0, Math.PI*2); ctx.fill(); ctx.shadowBlur = 0;
+    }
+    function place() { apple.x = Math.floor(Math.random()*grid); apple.y = Math.floor(Math.random()*grid); }
+    document.addEventListener('keydown', e => {
+        if (e.key === 'ArrowUp' && vel.y === 0) vel = {x: 0, y: -1};
+        if (e.key === 'ArrowDown' && vel.y === 0) vel = {x: 0, y: 1};
+        if (e.key === 'ArrowLeft' && vel.x === 0) vel = {x: -1, y: 0};
+        if (e.key === 'ArrowRight' && vel.x === 0) vel = {x: 1, y: 0};
+    });
+    update();
+</script>
+</body>
+</html>

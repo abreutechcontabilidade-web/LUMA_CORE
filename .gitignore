@@ -1,31 +1,29 @@
-# CISO GATE-9: PROIBIDO SUBIR CREDENCIAIS
-vault.json
-chaves.txt
-*.key
-*.pem
-_fix_path_and_key.py
-_inject_key_and_fix_path.py
-intelligence/key_detector.py
-
-# PROIBIDO SUBIR AMBIENTES VIRTUAIS
+﻿# Python
+__pycache__/
+*.py[cod]
+*.class
 .venv/
 venv/
-__pycache__/
-*.pyc
 
-# PROIBIDO SUBIR BACKUPS E LOGS
-*.bak_*
-*.log
-boot_t59.txt
-_t*.json
-dynamic_tools.json.PERICIA_*
+# Segredos (NUNCA ENVIAR PARA O GITHUB)
+vault.json
+.env
+*.key
+*.pem
 github_token.txt
-_inject_key.py
-test_llm.py
-_update_vault.py
-_test_llm.py
-_fix_*.py
-_*.py
-_*.py
+_inject_key*.py
+_archive/
+key_detector.py
 
-_*.py
+# Backups e Logs locais
+*.bak_*
+*.tmp
+*.log
+server_boot.*
+*_rescue.py
+*_patcher.py
+
+# Cache pesado
+intelligence/artefacts/*.quarentena_*
+*token*.txt
+*.bak_segredo

@@ -1,0 +1,77 @@
+<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Jogo Sintetizado</title><style>body{background:#050510;color:#00ffe1;font-family:monospace;display:flex;justify-content:center;align-items:center;height:100vh;margin:0;}canvas{border:2px solid #00ffe1;box-shadow:0 0 20px #00ffe1;}</style></head>
+<body><canvas id="game" width="800" height="500"></canvas>
+<script>
+const canvas=document.getElementById('game');const ctx=canvas.getContext('2d');
+let board=['','','','','','','','',''];let turn='X';let winner='';let cells=[{x:200,y:50},{x:350,y:50},{x:500,y:50},{x:200,y:200},{x:350,y:200},{x:500,y:200},{x:200,y:350},{x:350,y:350},{x:500,y:350}];
+
+        function checkWin(b, p){
+            const wins = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
+            return wins.some(w=>w.every(i=>b[i]===p));
+        }
+        function minimax(b, isMax){
+            if(checkWin(b,'O')) return 10;
+            if(checkWin(b,'X')) return -10;
+            if(!b.includes('')) return 0;
+            if(isMax){
+                let best=-100;
+                for(let i=0;i<9;i++){ if(b[i]===''){ b[i]='O'; best=Math.max(best,minimax(b,false)); b[i]=''; } }
+                return best;
+            } else {
+                let best=100;
+                for(let i=0;i<9;i++){ if(b[i]===''){ b[i]='X'; best=Math.min(best,minimax(b,true)); b[i]=''; } }
+                return best;
+            }
+        }
+        function iaMove(){
+            let bestVal=-100; let bestMove=-1;
+            for(let i=0;i<9;i++){
+                if(board[i]===''){
+                    board[i]='O';
+                    let moveVal = minimax(board,false);
+                    board[i]='';
+                    if(moveVal>bestVal){ bestMove=i; bestVal=moveVal; }
+                }
+            }
+            if(bestMove!==-1) board[bestMove]='O';
+        }
+        canvas.addEventListener('click', e=>{
+            if(winner||turn==='O') return;
+            let rect=canvas.getBoundingClientRect();
+            let mx=e.clientX-rect.left, my=e.clientY-rect.top;
+            cells.forEach((c,i)=>{
+                if(mx>c.x && mx<c.x+100 && my>c.y && my<c.y+100 && board[i]==='' && turn==='X'){
+                    board[i]='X';
+                    if(checkWin(board,'X')){ winner='X'; return; }
+                    if(!board.includes('')){ winner='Empate'; return; }
+                    turn='O'; iaMove();
+                    if(checkWin(board,'O')){ winner='O'; return; }
+                    if(!board.includes('')){ winner='Empate'; return; }
+                    turn='X';
+                }
+            });
+        });
+    
+
+function draw(){
+        ctx.fillStyle='#0a0a1a'; ctx.fillRect(0,0,800,500);
+        ctx.strokeStyle='#00ffe1'; ctx.lineWidth=4;
+        ctx.beginPath(); ctx.moveTo(300,50); ctx.lineTo(300,450); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(450,50); ctx.lineTo(450,450); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(150,150); ctx.lineTo(600,150); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(150,300); ctx.lineTo(600,300); ctx.stroke();
+        
+        ctx.font='80px monospace'; ctx.textAlign='center'; ctx.textBaseline='middle';
+        board.forEach((v,i)=>{
+            if(v){
+                ctx.fillStyle = v==='X' ? '#ff2fd6' : '#00ffe1';
+                ctx.fillText(v, cells[i].x+50, cells[i].y+50);
+            }
+        });
+        if(winner){
+            ctx.fillStyle='#fff'; ctx.font='30px monospace';
+            ctx.fillText('Vencedor: '+winner+'!', 400, 480);
+        }
+    }
+function update(t=0){draw();requestAnimationFrame(update);}
+update();
+</script></body></html>

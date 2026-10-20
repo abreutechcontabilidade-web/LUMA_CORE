@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head><meta charset="UTF-8"><title>Jogo Sintetizado</title><style>body{background:#050510;color:#00ffe1;font-family:monospace;display:flex;justify-content:center;align-items:center;height:100vh;margin:0;}canvas{border:2px solid #00ffe1;box-shadow:0 0 20px #00ffe1;}</style></head>
+<body>
+<canvas id="game" width="800" height="500"></canvas>
+<script>
+const canvas=document.getElementById('game');const ctx=canvas.getContext('2d');
+const grid=20,tile=canvas.width/grid;
+let pac={x:20,y:20,dx:2,dy:0};let dots=[[60,60],[100,100],[140,60]];
+addEventListener('keydown',e=>{if(e.key==='ArrowUp')pac.dy=-2;if(e.key==='ArrowDown')pac.dy=2;if(e.key==='ArrowLeft')pac.dx=-2;if(e.key==='ArrowRight')pac.dx=2;});
+
+function draw(){ctx.fillStyle='#0a0a1a';ctx.fillRect(0,0,canvas.width,canvas.height);ctx.fillStyle='#ff2fd6';ctx.fillRect(pac.x,pac.y,20,20);dots.forEach(d=>{ctx.fillStyle='#00ffe1';ctx.fillRect(d[0],d[1],10,10);});pac.x+=pac.dx;pac.y+=pac.dy;}
+function update(t=0){draw();requestAnimationFrame(update);}
+update(); // O GATILHO QUE FALTAVA
+</script>
+</body>
+</html>

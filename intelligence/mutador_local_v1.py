@@ -1,31 +1,52 @@
-"""STILB PURO - Mutador Local v1 (Bancada T70). Deterministico, idempotente, zero LLM."""
 import re
-MODS = {
-    "cyberpunk": ('<style id="stilb_mutation_v1">\n'
-        "html,body{background:#050510 !important;color:#e0f7ff !important}\n"
-        "canvas{background:#0a0a1a !important;border:1px solid #00ffe1 !important;"
-        "filter:drop-shadow(0 0 6px #00ffe1) drop-shadow(0 0 14px #ff00e0) !important}\n"
-        "button,.btn{background:#0a0a1a !important;color:#00ffe1 !important;"
-        "border:1px solid #ff00e0 !important;text-shadow:0 0 6px #00ffe1 !important}\n"
-        "h1,h2,h3,p{color:#ff00e0 !important;text-shadow:0 0 10px #ff00e0 !important}\n"
-        "</style>", "</head>"),
-    "velocidade": ('<script id="stilb_speed_v1">\n'
-        "(function(){var O=window.setInterval;window.setInterval=function(f,t){"
-        "return O(f,(t>=40&&t<=400)?Math.max(30,Math.round(t*0.6)):t)}})();\n"
-        "</script>", "<head>"),
-}
-_IDS = {"cyberpunk": "stilb_mutation_v1", "velocidade": "stilb_speed_v1"}
 
 def aplicar_mutacoes(html, prompt):
-    low, muts = prompt.lower(), []
-    for m, (bloco, ancora) in MODS.items():
-        if m not in low: continue
-        muts.append(m)
-        html = re.sub(r'<(?:style|script) id="' + _IDS[m] + r'">.*?</(?:style|script)>', "", html, flags=re.S)
-        al = ancora.lower()
-        if al in html.lower():
-            i = html.lower().index(al)
-            html = html[:i] + bloco + html[i:] if ancora == "</head>" else html[:i+len(ancora)] + bloco + html[i+len(ancora):]
+    if not isinstance(html, str) or not html:
+        return html, []
+        
+    p = prompt.lower()
+    muts = []
+    
+    # Limpa mutações antigas
+    html = re.sub(r'<style id="stilb_mutation_v1">.*?</style>', "", html, flags=re.S)
+    html = re.sub(r'<script id="stilb_canvas_v1">.*?</script>', "", html, flags=re.S)
+    
+    # Cores e Estilo
+    if "cyberpunk" in p or "neon" in p or "cor" in p or "azul" in p or "vermelho" in p:
+        muts.append("cyberpunk_v3")
+        
+        # CSS Nuclear (Interface)
+        css = """
+        <style id="stilb_mutation_v1">
+        body, html, main, section, div, header, footer, .arena, .card, .container, .score-board {
+            background-color: #050510 !important;
+            background-image: none !important;
+            color: #e0f7ff !important;
+            border-color: #ff2fd6 !important;
+        }
+        h1, h2, h3, p, span, label {
+            color: #ff2fd6 !important;
+            text-shadow: 0 0 10px #ff2fd6 !important;
+        }
+        button, .btn {
+            background-color: #1a1a2e !important;
+            color: #00ffe1 !important;
+            border: 1px solid #00ffe1 !important;
+        }
+        /* O Segredo está aqui: A Magia Matemática no Canvas */
+        canvas {
+            filter: hue-rotate(180deg) saturate(2) brightness(1.2) contrast(1.1) !important;
+            border: 2px solid #00ffe1 !important;
+            box-shadow: 0 0 20px #00ffe1 !important;
+            background-color: #0a0a1a !important;
+        }
+        </style>
+        """
+        
+        if "</head>" in html.lower():
+            i = html.lower().index("</head>")
+            html = html[:i] + css + html[i:]
         else:
-            html = bloco + html
+            html = css + html
+
     return html, muts

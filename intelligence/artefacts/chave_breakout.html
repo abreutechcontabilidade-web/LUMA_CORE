@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8"><title>Breakout</title>
+<style>body{background:#050510;color:#00ffe1;font-family:monospace;display:flex;justify-content:center;align-items:center;height:100vh;margin:0;}canvas{border:2px solid #00ffe1;box-shadow:0 0 20px #00ffe1;}</style></head>
+<body><canvas id="game" width="600" height="400"></canvas>
+<script>
+const canvas=document.getElementById('game'),ctx=canvas.getContext('2d');
+let paddle={x:250,y:380,w:100,h:10,dx:0},ball={x:300,y:350,dx:4,dy:-4,r:8};
+let bricks=[];for(let c=0;c<5;c++)for(let r=0;r<3;r++)bricks.push({x:c*120+15,y:r*30+30,w:100,h:20,vis:true});
+let keys={};addEventListener('keydown',e=>keys[e.key]=true);addEventListener('keyup',e=>keys[e.key]=false);
+function draw(){ctx.fillStyle='#0a0a1a';ctx.fillRect(0,0,600,400);
+ctx.fillStyle='#00ffe1';ctx.fillRect(paddle.x,paddle.y,paddle.w,paddle.h);
+ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(ball.x,ball.y,ball.r,0,Math.PI*2);ctx.fill();
+bricks.forEach(b=>{if(b.vis){ctx.fillStyle='#ff2fd6';ctx.fillRect(b.x,b.y,b.w,b.h);}});}
+function update(){if(keys['ArrowLeft'])paddle.x-=7;if(keys['ArrowRight'])paddle.x+=7;
+if(paddle.x<0)paddle.x=0;if(paddle.x>500)paddle.x=500;
+ball.x+=ball.dx;ball.y+=ball.dy;
+if(ball.x>592||ball.x<8)ball.dx*=-1;if(ball.y<8)ball.dy*=-1;
+if(ball.y>380&&ball.x>paddle.x&&ball.x<paddle.x+100)ball.dy=-4;
+bricks.forEach(b=>{if(b.vis&&ball.x>b.x&&ball.x<b.x+b.w&&ball.y>b.y&&ball.y<b.y+b.h){b.vis=false;ball.dy*=-1;}});
+draw();requestAnimationFrame(update);}update();
+</script></body></html>

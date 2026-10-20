@@ -1,0 +1,1493 @@
+﻿{
+    "total_arquivos_analisados":  228,
+    "data_atualizacao":  "2026-10-20 16:55:27",
+    "modulos":  [
+                    {
+                        "arquivo":  "backup_manager.py",
+                        "tags":  [
+
+                                 ],
+                        "funcoes":  "create_timestamped_backup"
+                    },
+                    {
+                        "arquivo":  "fix_entity.py",
+                        "tags":  [
+                                     "ONNX_NEURAL"
+                                 ],
+                        "funcoes":  [
+                                        "extrair_intencao",
+                                        "extrair_features"
+                                    ]
+                    },
+                    {
+                        "arquivo":  "patch_engine.py",
+                        "tags":  [
+
+                                 ],
+                        "funcoes":  [
+                                        "__init__",
+                                        "decode_all_entities",
+                                        "handle_comment",
+                                        "handle_decl",
+                                        "handle_starttag",
+                                        "handle_endtag",
+                                        "finalize",
+                                        "find_bounds",
+                                        "_calc_offset",
+                                        "calculate_sha256",
+                                        "find_slot_bounds",
+                                        "apply_patch_transaction"
+                                    ]
+                    },
+                    {
+                        "arquivo":  "sota_master_fix.py",
+                        "tags":  [
+                                     "ONNX_NEURAL"
+                                 ],
+                        "funcoes":  [
+                                        "extrair_intencao",
+                                        "extrair_features"
+                                    ]
+                    },
+                    {
+                        "arquivo":  "sota_safe_installer.py",
+                        "tags":  [
+                                     "ONNX_NEURAL"
+                                 ],
+                        "funcoes":  [
+                                        "extrair_intencao",
+                                        "extrair_features",
+                                        "__init__",
+                                        "processar",
+                                        "aprender_da_nuvem"
+                                    ]
+                    },
+                    {
+                        "arquivo":  "sota_transactional_installer.py",
+                        "tags":  [
+                                     "ONNX_NEURAL"
+                                 ],
+                        "funcoes":  [
+                                        "calc_sha",
+                                        "extrair_intencao",
+                                        "extrair_features"
+                                    ]
+                    },
+                    {
+                        "arquivo":  "sota_ultimate_fix.py",
+                        "tags":  [
+                                     "ONNX_NEURAL"
+                                 ],
+                        "funcoes":  [
+                                        "extrair_intencao",
+                                        "extrair_features",
+                                        "__init__",
+                                        "processar",
+                                        "aprender_da_nuvem"
+                                    ]
+                    },
+                    {
+                        "arquivo":  "test_backup_and_api_compat.py",
+                        "tags":  [
+
+                                 ],
+                        "funcoes":  [
+                                        "setUp",
+                                        "tearDown",
+                                        "test_backup_preserves_content_and_sha",
+                                        "test_backup_filename_timestamp_format",
+                                        "test_backup_when_file_does_not_exist",
+                                        "test_public_api_signatures_and_returns",
+                                        "test_exception_status_codes",
+                                        "test_failure_during_mkstemp_leaves_file_intact",
+                                        "test_failure_during_os_replace_cleans_temp_and_preserves_original"
+                                    ]
+                    },
+                    {
+                        "arquivo":  "test_lifo_patch_engine.py",
+                        "tags":  [
+
+                                 ],
+                        "funcoes":  [
+                                        "base_file",
+                                        "test_lifo_and_rollback"
+                                    ]
+                    },
+                    {
+                        "arquivo":  "test_regression_patch_engine.py",
+                        "tags":  [
+
+                                 ],
+                        "funcoes":  [
+                                        "setUp",
+                                        "tearDown",
+                                        "_assert_rollback",
+                                        "test_nested_tags_depth_tracking",
+                                        "test_conditional_comments_rejection",
+                                        "test_encoded_entity_uri_schemes",
+                                        "test_malformed_fragments",
+                                        "test_valid_mutation_success"
+                                    ]
+                    },
+                    {
+                        "arquivo":  "_fix_app_filter_v88.py",
+                        "tags":  [
+                                     "ONNX_NEURAL"
+                                 ],
+                        "funcoes":  {
+
+                                    }
+                    },
+                    {
+                        "arquivo":  "_fix_async_v95.py",
+                        "tags":  [
+                                     "ONNX_NEURAL"
+                                 ],
+                        "funcoes":  {
+
+                                    }
+                    },
+                    {
+                        "arquivo":  "_fix_block_v103.py",
+                        "tags":  [
+                                     "ONNX_NEURAL"
+                                 ],
+                        "funcoes":  {
+
+                                    }
+                    },
+                    {
+                        "arquivo":  "_fix_cto_final_v100.py",
+                        "tags":  [
+
+                                 ],
+                        "funcoes":  "aplicar_mutacoes"
+                    },
+                    {
+                        "arquivo":  "_fix_cto_v101.py",
+                        "tags":  [
+                                     "ONNX_NEURAL"
+                                 ],
+                        "funcoes":  {
+
+                                    }
+                    },
+                    {
+                        "arquivo":  "_fix_deadlock_v112.py",
+                        "tags":  [
+                                     "CPF_ARBOREO_QUEUE",
+                                     "ONNX_NEURAL"
+                                 ],
+                        "funcoes":  {
+
+                                    }
+                    },
+                    {
+                        "arquivo":  "_fix_dynamic_v98.py",
+                        "tags":  [
+
+                                 ],
+                        "funcoes":  "aplicar_mutacoes"
+                    },
+                    {
+                        "arquivo":  "_fix_edicao_v94.py",
+                        "tags":  [
+                                     "ONNX_NEURAL"
+                                 ],
+                        "funcoes":  {
+
+                                    }
+                    },
+                    {
+                        "arquivo":  "_fix_entrega_v94.py",
+                        "tags":  [
+                                     "ONNX_NEURAL"
+                                 ],
+                        "funcoes":  {
+
+                                    }
+                    },
+                    {
+                        "arquivo":  "_fix_espelho_v104.py",
+                        "tags":  [
+                                     "ONNX_NEURAL"
+                                 ],
+                        "funcoes":  {
+
+                                    }
+                    },
+                    {
+                        "arquivo":  "_fix_fantasma_v113.py",
+                        "tags":  [
+                                     "CPF_ARBOREO_QUEUE",
+                                     "ONNX_NEURAL"
+                                 ],
+                        "funcoes":  {
+
+                                    }
+                    },
+                    {
+                        "arquivo":  "_fix_fantasma_v114.py",
+                        "tags":  [
+                                     "CPF_ARBOREO_QUEUE",
+                                     "ONNX_NEURAL"
+                                 ],
+                        "funcoes":  "inferir_mutacao"
+                    },
+                    {
+                        "arquivo":  "_fix_final_safe.py",
+                        "tags":  [
+                                     "ONNX_NEURAL"
+                                 ],
+                        "funcoes":  "compila"
+                    },
+                    {
+                        "arquivo":  "_fix_final_v109.py",
+                        "tags":  [
+                                     "ONNX_NEURAL"
+                                 ],
+                        "funcoes":  "compila"
+                    },
+                    {
+                        "arquivo":  "_fix_final_v110.py",
+                        "tags":  [
+
+                                 ],
+                        "funcoes":  [
+                                        "compila",
+                                        "limpa_e_injeta",
+                                        "escopo_tem_prompt",
+                                        "gravar_se_compila"
+                                    ]
+                    },
+                    {
+                        "arquivo":  "_fix_final_v111.py",
+                        "tags":  [
+                                     "ONNX_NEURAL"
+                                 ],
+                        "funcoes":  "inferir_mutacao"
+                    },
+                    {
+                        "arquivo":  "_fix_final_v93.py",
+                        "tags":  [
+                                     "ONNX_NEURAL"
+                                 ],
+                        "funcoes":  [
+                                        "_atualizar_genoma",
+                                        "_tarefa_nuvem",
+                                        "_tarefa_web",
+                                        "aprender_em_segundo_plano"
+                                    ]
+                    },
+                    {
+                        "arquivo":  "_fix_g138.py",
+                        "tags":  [
+                                     "ONNX_NEURAL"
+                                 ],
+                        "funcoes":  {
+
+                                    }
+                    },
+                    {
+                        "arquivo":  "_fix_gate22_v84.py",
+                        "tags":  [
+
+                                 ],
+                        "funcoes":  [
+                                        "get_token",
+                                        "descarregar_asset",
+                                        "inlinar_dependencias",
+                                        "replace_css",
+                                        "replace_js",
+                                        "aprender_do_github",
+                                        "self_test"
+                                    ]
+                    },
+                    {
+                        "arquivo":  "_fix_inline_v102.py",
+                        "tags":  [
+                                     "ONNX_NEURAL"
+                                 ],
+                        "funcoes":  {
+
+                                    }
+                    },
+                    {
+                        "arquivo":  "_fix_intent_v87.py",
+                        "tags":  [
+                                     "ONNX_NEURAL"
+                                 ],
+                        "funcoes":  [
+                                        "extrair_chave",
+                                        "buscar_no_genoma",
+                                        "get_token",
+                                        "descarregar_asset",
+                                        "inlinar_dependencias",
+                                        "replace_css",
+                                        "replace_js",
+                                        "aprender_do_github",
+                                        "gerar_esqueleto_local",
+                                        "analisar_e_evoluir",
+                                        "processar_sintese"
+                                    ]
+                    },
+                    {
+                        "arquivo":  "_fix_knowledge_mapper_v86.py",
+                        "tags":  [
+                                     "ONNX_NEURAL"
+                                 ],
+                        "funcoes":  "abastecer_genoma"
+                    },
+                    {
+                        "arquivo":  "_fix_nivel05_v94.py",
+                        "tags":  [
+                                     "ONNX_NEURAL"
+                                 ],
+                        "funcoes":  {
+
+                                    }
+                    },
+                    {
+                        "arquivo":  "_fix_nuclear_v106.py",
+                        "tags":  [
+                                     "ONNX_NEURAL"
+                                 ],
+                        "funcoes":  "compila"
+                    },
+                    {
+                        "arquivo":  "_fix_pf50b_v99.py",
+                        "tags":  [
+
+                                 ],
+                        "funcoes":  "aplicar_mutacoes"
+                    },
+                    {
+                        "arquivo":  "_fix_real_v115.py",
+                        "tags":  [
+                                     "ONNX_NEURAL"
+                                 ],
+                        "funcoes":  "inferir_mutacao"
+                    },
+                    {
+                        "arquivo":  "_fix_regex_v100.py",
+                        "tags":  [
+                                     "ONNX_NEURAL"
+                                 ],
+                        "funcoes":  "inject_mutator"
+                    },
+                    {
+                        "arquivo":  "_fix_safe_v95.py",
+                        "tags":  [
+                                     "ONNX_NEURAL"
+                                 ],
+                        "funcoes":  "replacer"
+                    },
+                    {
+                        "arquivo":  "_fix_safe_v96.py",
+                        "tags":  [
+                                     "ONNX_NEURAL"
+                                 ],
+                        "funcoes":  {
+
+                                    }
+                    },
+                    {
+                        "arquivo":  "_fix_stilb_cache_v2.py",
+                        "tags":  [
+                                     "ONNX_NEURAL"
+                                 ],
+                        "funcoes":  {
+
+                                    }
+                    },
+                    {
+                        "arquivo":  "_fix_strict_match_v90.py",
+                        "tags":  [
+                                     "ONNX_NEURAL"
+                                 ],
+                        "funcoes":  [
+                                        "extrair_chave",
+                                        "buscar_no_genoma"
+                                    ]
+                    },
+                    {
+                        "arquivo":  "_fix_surgical_v101.py",
+                        "tags":  [
+                                     "ONNX_NEURAL"
+                                 ],
+                        "funcoes":  {
+
+                                    }
+                    },
+                    {
+                        "arquivo":  "_fix_t66_v89.py",
+                        "tags":  [
+                                     "ONNX_NEURAL"
+                                 ],
+                        "funcoes":  [
+                                        "extrair_chave",
+                                        "buscar_no_genoma"
+                                    ]
+                    },
+                    {
+                        "arquivo":  "_fix_v10.py",
+                        "tags":  [
+                                     "ONNX_NEURAL"
+                                 ],
+                        "funcoes":  "compila"
+                    },
+                    {
+                        "arquivo":  "_fix_v107.py",
+                        "tags":  [
+                                     "ONNX_NEURAL"
+                                 ],
+                        "funcoes":  {
+
+                                    }
+                    },
+                    {
+                        "arquivo":  "_fix_v95_final.py",
+                        "tags":  [
+                                     "ONNX_NEURAL"
+                                 ],
+                        "funcoes":  {
+
+                                    }
+                    },
+                    {
+                        "arquivo":  "_healer_indent.py",
+                        "tags":  [
+                                     "ONNX_NEURAL"
+                                 ],
+                        "funcoes":  [
+                                        "extrair_intencao",
+                                        "extrair_features"
+                                    ]
+                    },
+                    {
+                        "arquivo":  "_inject_key.py",
+                        "tags":  [
+                                     "UBER_OPTIMIZATION"
+                                 ],
+                        "funcoes":  {
+
+                                    }
+                    },
+                    {
+                        "arquivo":  "_inject_key_and_fix_path.py",
+                        "tags":  [
+                                     "UBER_OPTIMIZATION"
+                                 ],
+                        "funcoes":  [
+                                        "__init__",
+                                        "load_keys",
+                                        "get_key",
+                                        "mark_dead"
+                                    ]
+                    },
+                    {
+                        "arquivo":  "_integrate_engine.py",
+                        "tags":  [
+                                     "ONNX_NEURAL"
+                                 ],
+                        "funcoes":  "do_POST"
+                    },
+                    {
+                        "arquivo":  "_integrator_engine.py",
+                        "tags":  [
+                                     "ONNX_NEURAL"
+                                 ],
+                        "funcoes":  {
+
+                                    }
+                    },
+                    {
+                        "arquivo":  "_integrator_final.py",
+                        "tags":  [
+                                     "ONNX_NEURAL"
+                                 ],
+                        "funcoes":  {
+
+                                    }
+                    },
+                    {
+                        "arquivo":  "_patch_aprendiz_v14.py",
+                        "tags":  [
+                                     "UBER_OPTIMIZATION",
+                                     "ONNX_NEURAL"
+                                 ],
+                        "funcoes":  {
+
+                                    }
+                    },
+                    {
+                        "arquivo":  "_patch_aria_sota.py",
+                        "tags":  [
+
+                                 ],
+                        "funcoes":  [
+                                        "_abrir_sota",
+                                        "worker",
+                                        "_abrir_pasta"
+                                    ]
+                    },
+                    {
+                        "arquivo":  "_patch_cure_app.py",
+                        "tags":  [
+                                     "ONNX_NEURAL"
+                                 ],
+                        "funcoes":  {
+
+                                    }
+                    },
+                    {
+                        "arquivo":  "_patch_features_onnx.py",
+                        "tags":  [
+                                     "ONNX_NEURAL"
+                                 ],
+                        "funcoes":  [
+                                        "__init__",
+                                        "_load_dynamic_tools",
+                                        "processar",
+                                        "aprender_da_nuvem"
+                                    ]
+                    },
+                    {
+                        "arquivo":  "_patch_final_v48.py",
+                        "tags":  [
+                                     "ONNX_NEURAL"
+                                 ],
+                        "funcoes":  [
+                                        "extrair_chave_estavel",
+                                        "extrair_features",
+                                        "carregar_memoria",
+                                        "guardar_memoria",
+                                        "higienizar_miolo",
+                                        "__init__",
+                                        "processar",
+                                        "aprender_da_nuvem",
+                                        "_gerar_jogo_da_velha",
+                                        "_gerar_calculadora_cientifica"
+                                    ]
+                    },
+                    {
+                        "arquivo":  "_patch_fixnames.py",
+                        "tags":  [
+                                     "ONNX_NEURAL"
+                                 ],
+                        "funcoes":  "processar"
+                    },
+                    {
+                        "arquivo":  "_patch_force_mutation.py",
+                        "tags":  [
+                                     "ONNX_NEURAL"
+                                 ],
+                        "funcoes":  "processar"
+                    },
+                    {
+                        "arquivo":  "_patch_funcao.py",
+                        "tags":  [
+
+                                 ],
+                        "funcoes":  "extrair_chave"
+                    },
+                    {
+                        "arquivo":  "_patch_hooks.py",
+                        "tags":  [
+                                     "ONNX_NEURAL"
+                                 ],
+                        "funcoes":  "_gerar_calculadora_cientifica"
+                    },
+                    {
+                        "arquivo":  "_patch_hooks_v37.py",
+                        "tags":  [
+                                     "ONNX_NEURAL"
+                                 ],
+                        "funcoes":  {
+
+                                    }
+                    },
+                    {
+                        "arquivo":  "_patch_import_v51.py",
+                        "tags":  [
+                                     "ONNX_NEURAL"
+                                 ],
+                        "funcoes":  {
+
+                                    }
+                    },
+                    {
+                        "arquivo":  "_patch_injection.py",
+                        "tags":  [
+
+                                 ],
+                        "funcoes":  "inject_feature"
+                    },
+                    {
+                        "arquivo":  "_patch_intent.py",
+                        "tags":  [
+                                     "ONNX_NEURAL"
+                                 ],
+                        "funcoes":  [
+                                        "extrair_intencao",
+                                        "processar",
+                                        "aprender_da_nuvem"
+                                    ]
+                    },
+                    {
+                        "arquivo":  "_patch_keyring.py",
+                        "tags":  [
+                                     "ONNX_NEURAL"
+                                 ],
+                        "funcoes":  {
+
+                                    }
+                    },
+                    {
+                        "arquivo":  "_patch_mem_priority.py",
+                        "tags":  [
+                                     "ONNX_NEURAL"
+                                 ],
+                        "funcoes":  [
+                                        "extrair_intencao",
+                                        "processar"
+                                    ]
+                    },
+                    {
+                        "arquivo":  "_patch_onnx_tools.py",
+                        "tags":  [
+                                     "UBER_OPTIMIZATION",
+                                     "ONNX_NEURAL"
+                                 ],
+                        "funcoes":  [
+                                        "_gerar_cronometro",
+                                        "_gerar_forca",
+                                        "_gerar_calculadora_cientifica"
+                                    ]
+                    },
+                    {
+                        "arquivo":  "_patch_onnx_v13.py",
+                        "tags":  [
+                                     "UBER_OPTIMIZATION",
+                                     "ONNX_NEURAL"
+                                 ],
+                        "funcoes":  [
+                                        "_gerar_calculadora_cientifica",
+                                        "_gerar_jogo_da_velha_premium",
+                                        "processar"
+                                    ]
+                    },
+                    {
+                        "arquivo":  "_patch_priority.py",
+                        "tags":  [
+                                     "ONNX_NEURAL"
+                                 ],
+                        "funcoes":  "processar"
+                    },
+                    {
+                        "arquivo":  "_patch_restore_vigia.py",
+                        "tags":  [
+                                     "ONNX_NEURAL"
+                                 ],
+                        "funcoes":  {
+
+                                    }
+                    },
+                    {
+                        "arquivo":  "_patch_scaffold_fix.py",
+                        "tags":  [
+                                     "ONNX_NEURAL"
+                                 ],
+                        "funcoes":  "extrair_intencao"
+                    },
+                    {
+                        "arquivo":  "_patch_slot_app.py",
+                        "tags":  [
+                                     "ONNX_NEURAL"
+                                 ],
+                        "funcoes":  {
+
+                                    }
+                    },
+                    {
+                        "arquivo":  "_patch_sota_app.py",
+                        "tags":  [
+                                     "ONNX_NEURAL"
+                                 ],
+                        "funcoes":  {
+
+                                    }
+                    },
+                    {
+                        "arquivo":  "_patch_subset.py",
+                        "tags":  [
+                                     "ONNX_NEURAL"
+                                 ],
+                        "funcoes":  "processar"
+                    },
+                    {
+                        "arquivo":  "_patch_unify_onnx.py",
+                        "tags":  [
+                                     "ONNX_NEURAL"
+                                 ],
+                        "funcoes":  [
+                                        "extrair_intencao",
+                                        "processar"
+                                    ]
+                    },
+                    {
+                        "arquivo":  "_patch_v155.py",
+                        "tags":  [
+                                     "AI_MINIMAX"
+                                 ],
+                        "funcoes":  {
+
+                                    }
+                    },
+                    {
+                        "arquivo":  "_patch_v55_app.py",
+                        "tags":  [
+                                     "ONNX_NEURAL"
+                                 ],
+                        "funcoes":  {
+
+                                    }
+                    },
+                    {
+                        "arquivo":  "_patch_v59_onnx.py",
+                        "tags":  [
+                                     "ONNX_NEURAL"
+                                 ],
+                        "funcoes":  "processar"
+                    },
+                    {
+                        "arquivo":  "_patch_v61.py",
+                        "tags":  [
+                                     "UBER_OPTIMIZATION"
+                                 ],
+                        "funcoes":  {
+
+                                    }
+                    },
+                    {
+                        "arquivo":  "_pf53_rescue.py",
+                        "tags":  [
+
+                                 ],
+                        "funcoes":  "compila"
+                    },
+                    {
+                        "arquivo":  "_pf54_patcher.py",
+                        "tags":  [
+                                     "ONNX_NEURAL"
+                                 ],
+                        "funcoes":  [
+                                        "compila",
+                                        "escopo_tem_prompt"
+                                    ]
+                    },
+                    {
+                        "arquivo":  "_pf55_limpar.py",
+                        "tags":  [
+                                     "ONNX_NEURAL"
+                                 ],
+                        "funcoes":  "compila"
+                    },
+                    {
+                        "arquivo":  "_pf55_patcher.py",
+                        "tags":  [
+                                     "ONNX_NEURAL"
+                                 ],
+                        "funcoes":  [
+                                        "compila",
+                                        "escopo_tem_prompt"
+                                    ]
+                    },
+                    {
+                        "arquivo":  "_pf55_rescue.py",
+                        "tags":  [
+
+                                 ],
+                        "funcoes":  "compila"
+                    },
+                    {
+                        "arquivo":  "_pf56_patcher.py",
+                        "tags":  [
+
+                                 ],
+                        "funcoes":  [
+                                        "compila",
+                                        "limpa_e_injeta",
+                                        "escopo_tem_prompt",
+                                        "gravar_se_compila"
+                                    ]
+                    },
+                    {
+                        "arquivo":  "_pf56_smoke.py",
+                        "tags":  [
+
+                                 ],
+                        "funcoes":  "boom"
+                    },
+                    {
+                        "arquivo":  "_pf57_patcher.py",
+                        "tags":  [
+                                     "ONNX_NEURAL"
+                                 ],
+                        "funcoes":  "compila"
+                    },
+                    {
+                        "arquivo":  "_pf58_final.py",
+                        "tags":  [
+                                     "ONNX_NEURAL"
+                                 ],
+                        "funcoes":  {
+
+                                    }
+                    },
+                    {
+                        "arquivo":  "_pf58_patcher.py",
+                        "tags":  [
+
+                                 ],
+                        "funcoes":  "_resolvivel"
+                    },
+                    {
+                        "arquivo":  "_pf60_patcher.py",
+                        "tags":  [
+
+                                 ],
+                        "funcoes":  "extrair_chave"
+                    },
+                    {
+                        "arquivo":  "_pf63_censo.py",
+                        "tags":  [
+                                     "ONNX_NEURAL"
+                                 ],
+                        "funcoes":  {
+
+                                    }
+                    },
+                    {
+                        "arquivo":  "_purge_cache.py",
+                        "tags":  [
+                                     "ONNX_NEURAL"
+                                 ],
+                        "funcoes":  {
+
+                                    }
+                    },
+                    {
+                        "arquivo":  "_quantum_healer.py",
+                        "tags":  [
+                                     "ONNX_NEURAL"
+                                 ],
+                        "funcoes":  [
+                                        "extrair_intencao",
+                                        "extrair_features"
+                                    ]
+                    },
+                    {
+                        "arquivo":  "_refactor_sota.py",
+                        "tags":  [
+                                     "ONNX_NEURAL"
+                                 ],
+                        "funcoes":  [
+                                        "_send_json",
+                                        "do_OPTIONS",
+                                        "do_GET",
+                                        "do_POST"
+                                    ]
+                    },
+                    {
+                        "arquivo":  "_restore_stilb_v97.py",
+                        "tags":  [
+                                     "ONNX_NEURAL"
+                                 ],
+                        "funcoes":  "aplicar_mutacoes"
+                    },
+                    {
+                        "arquivo":  "_safe_integrator.py",
+                        "tags":  [
+                                     "ONNX_NEURAL"
+                                 ],
+                        "funcoes":  {
+
+                                    }
+                    },
+                    {
+                        "arquivo":  "_sota_absolute_fix.py",
+                        "tags":  [
+                                     "ONNX_NEURAL"
+                                 ],
+                        "funcoes":  [
+                                        "extrair_intencao",
+                                        "extrair_features"
+                                    ]
+                    },
+                    {
+                        "arquivo":  "_sota_fix_final.py",
+                        "tags":  [
+                                     "ONNX_NEURAL"
+                                 ],
+                        "funcoes":  [
+                                        "extrair_intencao",
+                                        "extrair_features"
+                                    ]
+                    },
+                    {
+                        "arquivo":  "_test_onnx_sota.py",
+                        "tags":  [
+                                     "ONNX_NEURAL"
+                                 ],
+                        "funcoes":  {
+
+                                    }
+                    },
+                    {
+                        "arquivo":  "_test_patch_engine.py",
+                        "tags":  [
+
+                                 ],
+                        "funcoes":  "check"
+                    },
+                    {
+                        "arquivo":  "core\\audit.py",
+                        "tags":  [
+
+                                 ],
+                        "funcoes":  [
+                                        "__init__",
+                                        "commit",
+                                        "read_last"
+                                    ]
+                    },
+                    {
+                        "arquivo":  "core\\cortex.py",
+                        "tags":  [
+
+                                 ],
+                        "funcoes":  "avaliar_bioritmo"
+                    },
+                    {
+                        "arquivo":  "core\\event_bus.py",
+                        "tags":  [
+
+                                 ],
+                        "funcoes":  [
+                                        "__init__",
+                                        "subscribe",
+                                        "publish",
+                                        "history"
+                                    ]
+                    },
+                    {
+                        "arquivo":  "core\\hardware.py",
+                        "tags":  [
+
+                                 ],
+                        "funcoes":  [
+                                        "_build_ramp",
+                                        "_apply",
+                                        "alterar_brilho",
+                                        "alterar_calor",
+                                        "ler_status_hardware"
+                                    ]
+                    },
+                    {
+                        "arquivo":  "core\\reflexo.py",
+                        "tags":  [
+
+                                 ],
+                        "funcoes":  [
+                                        "log",
+                                        "avaliar_regra",
+                                        "aplicar_patch",
+                                        "correr"
+                                    ]
+                    },
+                    {
+                        "arquivo":  "core\\safety.py",
+                        "tags":  [
+
+                                 ],
+                        "funcoes":  "check"
+                    },
+                    {
+                        "arquivo":  "core\\state.py",
+                        "tags":  [
+
+                                 ],
+                        "funcoes":  [
+                                        "__init__",
+                                        "update"
+                                    ]
+                    },
+                    {
+                        "arquivo":  "core\\telemetry.py",
+                        "tags":  [
+
+                                 ],
+                        "funcoes":  [
+                                        "_cpu",
+                                        "_memory",
+                                        "_disk",
+                                        "_uptime",
+                                        "coletar"
+                                    ]
+                    },
+                    {
+                        "arquivo":  "core\\vigia.py",
+                        "tags":  [
+
+                                 ],
+                        "funcoes":  [
+                                        "__init__",
+                                        "_loop",
+                                        "start",
+                                        "stop",
+                                        "last"
+                                    ]
+                    },
+                    {
+                        "arquivo":  "core\\raw\\raw_cortex.py",
+                        "tags":  [
+
+                                 ],
+                        "funcoes":  [
+                                        "__init__",
+                                        "_ms",
+                                        "_clean",
+                                        "parse_fasta",
+                                        "gc_percent",
+                                        "shannon_entropy",
+                                        "_entropy_from_counts",
+                                        "_assess_dna_state",
+                                        "_looks_like_fastq",
+                                        "_scan_orfs_strand",
+                                        "_fallback_orfs",
+                                        "_tax_hint",
+                                        "_pista_para",
+                                        "illuminate_sequence",
+                                        "illuminate_file",
+                                        "_analyze_dna",
+                                        "_stream_fasta_large",
+                                        "_analyze_fastq",
+                                        "_stream_fastq_file",
+                                        "_finalize_fastq",
+                                        "_analyze_plddt",
+                                        "_sign",
+                                        "verify_hash"
+                                    ]
+                    },
+                    {
+                        "arquivo":  "core\\raw\\raw_hardware.py",
+                        "tags":  [
+                                     "UBER_OPTIMIZATION",
+                                     "CPF_ARBOREO_QUEUE"
+                                 ],
+                        "funcoes":  [
+                                        "rampa_identidade",
+                                        "_rampa_monotona",
+                                        "_tentar",
+                                        "construir_ramp",
+                                        "aplicar_gamma",
+                                        "_enum_fisicos",
+                                        "cb",
+                                        "ddc_ler",
+                                        "__init__",
+                                        "run",
+                                        "idle_segundos",
+                                        "app_ativo",
+                                        "ler_bateria",
+                                        "__call__",
+                                        "fundir",
+                                        "curva_ascii",
+                                        "escolhe",
+                                        "feedback",
+                                        "observa",
+                                        "preve",
+                                        "dump",
+                                        "reset",
+                                        "transicao_em_curso",
+                                        "transicionar",
+                                        "_passos",
+                                        "registrar_uso",
+                                        "registrar_pausa",
+                                        "registrar_ruido",
+                                        "diagnosticar",
+                                        "detectar_ip_thread",
+                                        "carregar_cfg",
+                                        "salvar_cfg",
+                                        "log_aria",
+                                        "definir_autostart",
+                                        "nascer_poser",
+                                        "encerrar",
+                                        "prefixo",
+                                        "_icone",
+                                        "definir",
+                                        "barra",
+                                        "rot",
+                                        "sld",
+                                        "_atualizar_lbl_perfil",
+                                        "_preset_idx",
+                                        "_mudanca",
+                                        "preset",
+                                        "_salvar_depois",
+                                        "_salvar_agora",
+                                        "_cusum_perguntar",
+                                        "resetar",
+                                        "_eh_noite",
+                                        "_alvo_fundido",
+                                        "_aria_aplicar_alvo",
+                                        "_aria_status",
+                                        "_toggle_aria",
+                                        "_tick_geral",
+                                        "_porque_janela",
+                                        "_cerebro_janela",
+                                        "atualizar",
+                                        "esquecer",
+                                        "_circa_janela",
+                                        "_guia_janela",
+                                        "linha",
+                                        "_exportar",
+                                        "_abrir_pasta",
+                                        "_calibrar",
+                                        "_aplicar_lat",
+                                        "_cidade_enter",
+                                        "_pedir_ip",
+                                        "_ip_resultado",
+                                        "_iniciar_atalhos",
+                                        "_parar_atalhos",
+                                        "_legenda_atalhos",
+                                        "_poll",
+                                        "_distribuir",
+                                        "_acao_atalho",
+                                        "_osd",
+                                        "_alternar_janela",
+                                        "_toggle_atalhos",
+                                        "_toggle_windows",
+                                        "_toggle_noite",
+                                        "_montar_tray",
+                                        "mk",
+                                        "_fechar_janela",
+                                        "sair_total"
+                                    ]
+                    },
+                    {
+                        "arquivo":  "intelligence\\background_learner.py",
+                        "tags":  [
+                                     "ONNX_NEURAL"
+                                 ],
+                        "funcoes":  [
+                                        "_atualizar_genoma",
+                                        "_tarefa_nuvem",
+                                        "_tarefa_web",
+                                        "aprender_em_segundo_plano"
+                                    ]
+                    },
+                    {
+                        "arquivo":  "intelligence\\cure_engine.py",
+                        "tags":  [
+
+                                 ],
+                        "funcoes":  "higienizar_miolo"
+                    },
+                    {
+                        "arquivo":  "intelligence\\direct_web_connector.py",
+                        "tags":  [
+
+                                 ],
+                        "funcoes":  "ligar_a_web"
+                    },
+                    {
+                        "arquivo":  "intelligence\\dom_parser.py",
+                        "tags":  [
+
+                                 ],
+                        "funcoes":  [
+                                        "__init__",
+                                        "handle_starttag",
+                                        "ler_miolo"
+                                    ]
+                    },
+                    {
+                        "arquivo":  "intelligence\\fallback.py",
+                        "tags":  [
+                                     "UBER_OPTIMIZATION"
+                                 ],
+                        "funcoes":  [
+                                        "carregar_vault",
+                                        "_pendente_recente",
+                                        "_gerar_gemini",
+                                        "_gerar_openai_compat",
+                                        "_gerar_anthropic",
+                                        "gerar_com_fallback"
+                                    ]
+                    },
+                    {
+                        "arquivo":  "intelligence\\feature_engine.py",
+                        "tags":  [
+
+                                 ],
+                        "funcoes":  [
+                                        "carregar_memoria",
+                                        "guardar_memoria",
+                                        "extrair_intencao",
+                                        "extrair_features"
+                                    ]
+                    },
+                    {
+                        "arquivo":  "intelligence\\github_game_search.py",
+                        "tags":  [
+
+                                 ],
+                        "funcoes":  "search_game_repo"
+                    },
+                    {
+                        "arquivo":  "intelligence\\github_learner.py",
+                        "tags":  [
+
+                                 ],
+                        "funcoes":  "aprender_do_github"
+                    },
+                    {
+                        "arquivo":  "intelligence\\injector_engine.py",
+                        "tags":  [
+
+                                 ],
+                        "funcoes":  [
+                                        "detectar_posicao",
+                                        "extrair_feature",
+                                        "injetar_feature"
+                                    ]
+                    },
+                    {
+                        "arquivo":  "intelligence\\key_detector.py",
+                        "tags":  [
+                                     "UBER_OPTIMIZATION"
+                                 ],
+                        "funcoes":  [
+                                        "detetar_provider",
+                                        "candidatos_para_ambiguo",
+                                        "candidatos_para_gemini",
+                                        "resolver"
+                                    ]
+                    },
+                    {
+                        "arquivo":  "intelligence\\key_ring.py",
+                        "tags":  [
+
+                                 ],
+                        "funcoes":  [
+                                        "__init__",
+                                        "load_keys",
+                                        "get_key",
+                                        "mark_dead"
+                                    ]
+                    },
+                    {
+                        "arquivo":  "intelligence\\knowledge_mapper.py",
+                        "tags":  [
+                                     "ONNX_NEURAL"
+                                 ],
+                        "funcoes":  "abastecer_genoma"
+                    },
+                    {
+                        "arquivo":  "intelligence\\local_synthesis.py",
+                        "tags":  [
+
+                                 ],
+                        "funcoes":  [
+                                        "gerar_esqueleto_local",
+                                        "analisar_e_evoluir",
+                                        "processar_sintese"
+                                    ]
+                    },
+                    {
+                        "arquivo":  "intelligence\\local_synthesizer.py",
+                        "tags":  [
+
+                                 ],
+                        "funcoes":  "synthesize_calculator"
+                    },
+                    {
+                        "arquivo":  "intelligence\\luma_patch.py",
+                        "tags":  [
+
+                                 ],
+                        "funcoes":  [
+                                        "aplicar_edits",
+                                        "validar",
+                                        "carregar_regra",
+                                        "main"
+                                    ]
+                    },
+                    {
+                        "arquivo":  "intelligence\\model_discovery.py",
+                        "tags":  [
+
+                                 ],
+                        "funcoes":  [
+                                        "_classificar_erro",
+                                        "_testar_google_genai",
+                                        "_testar_openai_compat",
+                                        "_testar_anthropic",
+                                        "_testar_gemini_dual",
+                                        "_testar_provider_direto",
+                                        "resolver_chave"
+                                    ]
+                    },
+                    {
+                        "arquivo":  "intelligence\\mutador_local_v1.py",
+                        "tags":  [
+
+                                 ],
+                        "funcoes":  "aplicar_mutacoes"
+                    },
+                    {
+                        "arquivo":  "intelligence\\mutador_stilb_v1.py",
+                        "tags":  [
+
+                                 ],
+                        "funcoes":  [
+                                        "_inject",
+                                        "aplicar_mutacoes",
+                                        "_stilb_mutar_seguro"
+                                    ]
+                    },
+                    {
+                        "arquivo":  "intelligence\\onnx_bridge.py",
+                        "tags":  [
+
+                                 ],
+                        "funcoes":  "inferir_mutacao"
+                    },
+                    {
+                        "arquivo":  "intelligence\\onnx_sota.py",
+                        "tags":  [
+                                     "ONNX_NEURAL"
+                                 ],
+                        "funcoes":  [
+                                        "_norm",
+                                        "_match",
+                                        "detectar_intencao",
+                                        "detectar_features",
+                                        "detectar_posicoes",
+                                        "detectar_modificadores",
+                                        "compor_chave",
+                                        "inspecionar",
+                                        "adicionar_intencao",
+                                        "adicionar_feature",
+                                        "adicionar_posicao"
+                                    ]
+                    },
+                    {
+                        "arquivo":  "intelligence\\onnx_sovereign.py",
+                        "tags":  [
+
+                                 ],
+                        "funcoes":  [
+                                        "extrair_chave",
+                                        "buscar_no_genoma"
+                                    ]
+                    },
+                    {
+                        "arquivo":  "intelligence\\patch_engine.py",
+                        "tags":  [
+
+                                 ],
+                        "funcoes":  "aplicar_patch_tetris_avancado"
+                    },
+                    {
+                        "arquivo":  "intelligence\\providers.py",
+                        "tags":  [
+                                     "UBER_OPTIMIZATION"
+                                 ],
+                        "funcoes":  [
+                                        "listar_providers",
+                                        "obter_provider",
+                                        "info"
+                                    ]
+                    },
+                    {
+                        "arquivo":  "intelligence\\sintetizador_local.py",
+                        "tags":  [
+                                     "AI_MINIMAX"
+                                 ],
+                        "funcoes":  [
+                                        "carregar_genoma",
+                                        "sintetizar_jogo"
+                                    ]
+                    },
+                    {
+                        "arquivo":  "intelligence\\slot_engine.py",
+                        "tags":  [
+
+                                 ],
+                        "funcoes":  [
+                                        "validar_delta",
+                                        "_substituir_inner",
+                                        "_adicionar_inner",
+                                        "_adicionar_css",
+                                        "_adicionar_js",
+                                        "aplicar_delta"
+                                    ]
+                    },
+                    {
+                        "arquivo":  "intelligence\\swarm_engine.py",
+                        "tags":  [
+                                     "UBER_OPTIMIZATION"
+                                 ],
+                        "funcoes":  [
+                                        "_bater_chave",
+                                        "disparar_enxame"
+                                    ]
+                    },
+                    {
+                        "arquivo":  "intelligence\\virtual_onnx.py",
+                        "tags":  [
+                                     "ONNX_NEURAL"
+                                 ],
+                        "funcoes":  [
+                                        "__init__",
+                                        "processar",
+                                        "aprender_da_nuvem"
+                                    ]
+                    },
+                    {
+                        "arquivo":  "intelligence\\web_learner.py",
+                        "tags":  [
+
+                                 ],
+                        "funcoes":  "pesquisar_na_web"
+                    },
+                    {
+                        "arquivo":  "intelligence\\_genoma_writer.py",
+                        "tags":  [
+                                     "AI_MINIMAX"
+                                 ],
+                        "funcoes":  {
+
+                                    }
+                    },
+                    {
+                        "arquivo":  "server\\app.py",
+                        "tags":  [
+                                     "AI_MINIMAX"
+                                 ],
+                        "funcoes":  [
+                                        "extrair_chave",
+                                        "_gate33_validar",
+                                        "caminho_da_chave",
+                                        "cache_ler",
+                                        "cache_gravar",
+                                        "log_message",
+                                        "translate_path",
+                                        "_send_json",
+                                        "do_GET",
+                                        "do_POST"
+                                    ]
+                    }
+                ]
+}

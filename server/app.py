@@ -1,221 +1,200 @@
-# -*- coding: utf-8 -*-
-import http.server
-import socketserver
-import json
-import os
-import sys
-import time
-import urllib.request
-import urllib.error
-import threading
+import http.server, socketserver, json, os, sys, re, time, shutil, difflib
 
-# Configuração de caminhos
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-sys.path.insert(0, BASE_DIR)
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+try:
+    from intelligence.sintetizador_local import sintetizar_jogo
+    from intelligence.orquestrador import similaridade_cosseno, analisar_dna, classificar_intencao
+except ImportError as e:
+    print(f"[BOOT ERROR] {e}"); sys.exit(1)
 
-# Imports da Inteligência
-from intelligence.key_ring import KeyRing
-from intelligence.swarm_engine import disparar_enxame
-from intelligence.onnx_sovereign import buscar_no_genoma
-from intelligence.dom_parser import ler_miolo
-from intelligence.onnx_bridge import inferir_mutacao, aplicar_mutacoes
-from intelligence.github_learner import aprender_do_github
-from intelligence.local_synthesis import gerar_esqueleto_local
-from intelligence.background_learner import aprender_em_segundo_plano
+PORT = 8080
+ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+ARTEFACTOS_DIR = os.path.join(ROOT_DIR, "intelligence", "artefacts")
 
-# Inicialização Global
-VAULT_PATH = r"C:\Users\user\Desktop\cpf_arboreo_repo\_bancada\motor\lib\vault.json"
-if not os.path.exists(VAULT_PATH):
-    VAULT_PATH = r"C:\Users\user\Desktop\lumazbit\vault.json"
-anel = KeyRing(VAULT_PATH)
+CHAVES = [
+    ("jogo_da_velha", ("jogo da velha", "tic tac toe")),
+    ("jogo_da_cobra", ("cobra", "snake")),
+    ("pong", ("pong", "raquete")),
+    ("tetris", ("tetris",)),
+    ("pacman", ("pacman",)),
+    ("breakout", ("breakout", "tijolos", "tijolo")),
+    ("space", ("space", "nave")),
+    ("corrida", ("corrida", "race", "carro")),
+    ("metroid", ("metroid", "plataforma", "mario", "tiro")),
+    ("rpg", ("rpg", "texto")),
+    ("memoria", ("memoria", "memory")),
+    ("tower", ("tower", "defesa")),
+    ("velha_ia", ("velha ia", "minimax")),
+    ("calculadora", ("calculadora", "calculator")),
+]
 
-DB_PATH = os.path.join(BASE_DIR, "intelligence", "dynamic_tools.json")
+def extrair_chave(prompt):
+    p = (prompt or "").lower()
+    for chave, marcas in CHAVES:
+        for m in marcas:
+            if re.search(r"(?<![a-z0-9])" + re.escape(m) + r"s?(?![a-z0-9])", p): return chave
+    universo = {}
+    for chave, ws in CHAVES:
+        for w in ws: universo[w] = chave
+    for w in re.findall(r'[a-z0-9]+', p):
+        m = difflib.get_close_matches(w, list(universo.keys()), n=1, cutoff=0.75)
+        if m and abs(len(w) - len(m[0])) <= 1: return universo[m[0]]
+    return ""
 
-class LumaCoreHandler(http.server.SimpleHTTPRequestHandler):
-    def _send_json(self, data, status=200):
-        try:
-            response = json.dumps(data).encode("utf-8")
-            self.send_response(status)
-            self.send_header("Content-Type", "application/json; charset=utf-8")
-            self.send_header("Access-Control-Allow-Origin", "*")
-            self.send_header("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
-            self.send_header("Access-Control-Allow-Headers", "Content-Type, Authorization")
-            self.send_header("Content-Length", str(len(response)))
-            self.end_headers()
-            self.wfile.write(response)
-        except Exception as e:
-            print(f"[ERRO] Falha ao enviar JSON: {e}")
+class Handler(http.server.SimpleHTTPRequestHandler):
+    def log_message(self, fmt, *args): return
 
-    def do_OPTIONS(self):
+    def translate_path(self, path):
+        path = path.split('?', 1)[0].split('#', 1)[0]
+        if path.startswith("/artefacts/"):
+            filename = path.replace("/artefacts/", "")
+            return os.path.join(ARTEFACTOS_DIR, filename)
+        return super().translate_path(path)
+    
+    def _send_json(self, data):
         self.send_response(200)
-        self.send_header("Access-Control-Allow-Origin", "*")
-        self.send_header("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
-        self.send_header("Access-Control-Allow-Headers", "Content-Type, Authorization")
+        self.send_header('Content-type', 'application/json')
         self.end_headers()
+        self.wfile.write(json.dumps(data, ensure_ascii=False).encode('utf-8'))
 
     def do_GET(self):
         if self.path == "/api/status":
-            self._send_json({"status": "LUMA_CORE v83.0 (SOTA Clean)", "timestamp": time.time(), "vigia": True})
-        elif self.path == "/api/telemetry":
-            self._send_json({"status": "success", "snapshot": {"cpu": {"value": 15, "quality": "measured"}}})
-        elif self.path.startswith("/api/audit"):
-            self._send_json({"status": "success", "events": [{"event": "boot", "hash": "abc123"}]})
-        else:
-            # Servir ficheiros estáticos (Cockpit SOTA)
-            super().do_GET()
+            self._send_json({"status": "LUMA_CORE v158 (Dashboard)", "services": ["games", "dna", "recommendation"]}); return
+        
+        if self.path == "/" or self.path == "/hub":
+            try: arquivos = [f for f in os.listdir(ARTEFACTOS_DIR) if f.startswith("chave_") and f.endswith(".html")]
+            except Exception: arquivos = []
+            
+            cards = "".join([f'<div class="card"><h2>{f.replace("chave_","").replace(".html","").title()}</h2><a href="/artefacts/{f}" target="_blank">JOGAR</a></div>' for f in arquivos])
+            
+            hub = f"""<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"><title>LUMA_CORE // DASHBOARD</title>
+<style>
+    body {{ background: #050510; color: #00ffe1; font-family: 'Courier New', monospace; padding: 30px; }}
+    h1 {{ color: #ff2fd6; text-shadow: 0 0 20px #ff2fd6; text-align: center; }}
+    h2 {{ color: #ff2fd6; border-bottom: 1px solid #ff2fd6; padding-bottom: 5px; }}
+    .grid {{ display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px; }}
+    .panel {{ border: 2px solid #00ffe1; padding: 20px; background: #0a0a1a; box-shadow: 0 0 10px rgba(0,255,225,0.2); }}
+    textarea, input {{ width: 100%; background: #050510; color: #00ffe1; border: 1px solid #00ffe1; padding: 10px; margin: 10px 0; font-family: monospace; }}
+    button {{ background: #00ffe1; color: #000; border: none; padding: 10px 20px; font-weight: bold; cursor: pointer; }}
+    button:hover {{ background: #ff2fd6; color: #fff; }}
+    .result {{ margin-top: 15px; padding: 10px; border-left: 4px solid #ff2fd6; background: rgba(255,47,214,0.1); }}
+    .arcade-grid {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; }}
+    .card {{ border: 1px solid #00ffe1; padding: 15px; text-align: center; }}
+    .card a {{ color: #000; background: #00ffe1; padding: 5px 10px; text-decoration: none; font-weight: bold; display: inline-block; margin-top: 10px; }}
+</style>
+</head>
+<body>
+    <h1>LUMA_CORE UNIFIED DASHBOARD</h1>
+    
+    <div class="grid">
+        <!-- DNA ENGINE -->
+        <div class="panel">
+            <h2>CPF Arbóreo // Análise Genética</h2>
+            <textarea id="dnaInput" rows="3" placeholder="Cole a sequência (ex: ATGCGATCGTAGCT..."></textarea>
+            <button onclick="analisarDNA()">Analisar Sequência</button>
+            <div id="dnaResult" class="result">Aguardando...</div>
+        </div>
+
+        <!-- RECOMMENDATION ENGINE -->
+        <div class="panel">
+            <h2>Spotify Engine // Similaridade Cosseno</h2>
+            <input type="text" id="v1" placeholder="Vetor 1 (ex: 1, 2, 3)">
+            <input type="text" id="v2" placeholder="Vetor 2 (ex: 2, 3, 4)">
+            <button onclick="calcularSim()">Calcular Similaridade</button>
+            <div id="simResult" class="result">Aguardando...</div>
+        </div>
+    </div>
+
+    <!-- ARCADE -->
+    <h2 style="margin-top: 40px;">Arcade Local // Sintetizador</h2>
+    <div class="arcade-grid">
+        {cards}
+    </div>
+
+<script>
+    async function analisarDNA() {{
+        const seq = document.getElementById('dnaInput').value;
+        const res = await fetch('/api/dna', {{
+            method: 'POST', headers: {{'Content-Type': 'application/json'}},
+            body: JSON.stringify({{sequencia: seq}})
+        }});
+        const data = await res.json();
+        if(data.status === 'success') {{
+            document.getElementById('dnaResult').innerHTML = `
+                <b>Tamanho:</b> ${{data.resultado.tamanho}} bp<br>
+                <b>GC Content:</b> ${{data.resultado.gc_percent}}%<br>
+                <b>AT Content:</b> ${{data.resultado.at_percent}}%`;
+        }}
+    }}
+
+    async function calcularSim() {{
+        const v1 = document.getElementById('v1').value.split(',').map(Number);
+        const v2 = document.getElementById('v2').value.split(',').map(Number);
+        const res = await fetch('/api/recommend', {{
+            method: 'POST', headers: {{'Content-Type': 'application/json'}},
+            body: JSON.stringify({{v1: v1, v2: v2}})
+        }});
+        const data = await res.json();
+        if(data.status === 'success') {{
+            document.getElementById('simResult').innerHTML = `<b>Similaridade:</b> ${{data.similaridade.toFixed(4)}}`;
+        }}
+    }}
+</script>
+</body>
+</html>"""
+            self.send_response(200); self.send_header('Content-type', 'text/html; charset=utf-8'); self.end_headers(); self.wfile.write(hub.encode('utf-8')); return
+        super().do_GET()
 
     def do_POST(self):
         if self.path == "/api/generate_cloud":
-            start_time = time.perf_counter()
-            content_length = int(self.headers.get("Content-Length", 0))
-            post_data = self.rfile.read(content_length)
+            n = int(self.headers.get('Content-Length', 0))
+            body = json.loads(self.rfile.read(n).decode('utf-8'))
+            prompt = body.get("prompt", "")
+            intencao = classificar_intencao(prompt)
             
-            try:
-                req_data = json.loads(post_data)
-                prompt = req_data.get("prompt", "")
-            except Exception:
-                self._send_json({"error": "JSON invalido"}, 400)
-                return
+            if intencao == "dna":
+                res = analisar_dna(prompt.replace("analisar dna ", "").strip())
+                self._send_json({"status": "success", "fonte": "DNA_ENGINE", "resultado": res}); return
+            elif intencao == "recommend":
+                self._send_json({"status": "success", "fonte": "SPOTIFY_ENGINE", "resultado": "Use a dashboard ou a API /api/recommend."}); return
+            
+            chave = extrair_chave(prompt)
+            if chave:
+                file_path = os.path.join(ARTEFACTOS_DIR, f"chave_{chave}.html")
+                if os.path.exists(file_path):
+                    with open(file_path, "r", encoding="utf-8") as f: html = f.read()
+                    self._send_json({"status": "success", "html": html, "fonte": "CACHE_VALIDADO"}); return
+                html = sintetizar_jogo(prompt)
+                if html:
+                    with open(file_path, "w", encoding="utf-8") as f: f.write(html)
+                    self._send_json({"status": "success", "html": html, "fonte": "SINTETIZADOR_LOCAL"}); return
+            self._send_json({"status": "error", "msg": "Nao reconhecido."}); return
 
-            # Carregar memória do disco (evita clobber)
-            try:
-                with open(DB_PATH, "r", encoding="utf-8") as f:
-                    memoria = json.load(f)
-            except:
-                memoria = {}
+        if self.path == "/api/game":
+            n = int(self.headers.get('Content-Length', 0))
+            body = json.loads(self.rfile.read(n).decode('utf-8'))
+            html = sintetizar_jogo(body.get("prompt", ""))
+            self._send_json({"status": "success", "html": html, "fonte": "GAME_ENGINE"}); return
 
-            # --- NÍVEL 1: ONNX LOCAL ---
-            print(f"[ONNX] Buscando correspondencia para: '{prompt[:30]}...'")
-            intent_onnx, score = buscar_no_genoma(prompt, memoria)
-            
-            if intent_onnx and score > 0.4:
-                print(f"[ONNX] Match! Chave: '{intent_onnx}' | Score: {score:.2f}")
-                entry = memoria.get(intent_onnx, {})
-                html_atual = entry.get("html", "") if isinstance(entry, dict) else entry
-                
-                # --- STILB MUTATOR NO CACHE (NIVEL 1) ---
-                try:
-                    from intelligence.mutador_local_v1 import aplicar_mutacoes
-                    html_atual, _muts = aplicar_mutacoes(html_atual, prompt)
-                    if _muts:
-                        print(f"[NIVEL 1 STILB] Mutacoes aplicadas no cache: {_muts}")
-                except Exception as e:
-                    print(f"[AVISO] Erro no mutador STILB: {e}")
-                # ----------------------------------------
-                
-                miolo = ler_miolo(html_atual)
-                mutacoes = inferir_mutacao(prompt, miolo)
-                
-                # Dispara background learning
-                aprender_em_segundo_plano(prompt, intent_onnx, anel, DB_PATH)
-                
-                if mutacoes:
-                    print(f"[ONNX] Mutacoes decididas: {len(mutacoes)}")
-                    html_evoluido = aplicar_mutacoes(html_atual, mutacoes)
-                    
-                    # GATE-19: Escrita Atómica
-                    features_antigas = entry.get("features", []) if isinstance(entry, dict) else []
-                    memoria[intent_onnx] = {"html": html_evoluido, "features": list(set(features_antigas + ["mutacao_onnx"]))}
-                    tmp = DB_PATH + ".tmp"
-                    with open(tmp, "w", encoding="utf-8") as f:
-                        json.dump(memoria, f, ensure_ascii=False, indent=2)
-                    os.replace(tmp, DB_PATH)
-                    
-                    elapsed = round((time.perf_counter() - start_time) * 1000, 2)
-                    self._send_json({"status": "success", "html": html_evoluido, "fonte": "ONNX_MUTACAO_LOCAL", "elapsed_ms": elapsed})
-                    return
-                else:
-                    elapsed = round((time.perf_counter() - start_time) * 1000, 2)
-                    self._send_json({"status": "success", "html": html_atual, "fonte": "ONNX_CACHE_PURO", "elapsed_ms": elapsed})
-                    return
+        if self.path == "/api/dna":
+            n = int(self.headers.get('Content-Length', 0))
+            body = json.loads(self.rfile.read(n).decode('utf-8'))
+            res = analisar_dna(body.get("sequencia", ""))
+            self._send_json({"status": "success", "resultado": res, "fonte": "BIO_ENGINE"}); return
 
-            # --- NÍVEL 2: ENXAME ---
-            print(f"[LOCAL] Nenhum match. Acionando Enxame...")
-            resposta_final, fonte = disparar_enxame(prompt, anel)
-            
-            if resposta_final:
-                try:
-                    # Salvar via Servidor (GATE-19)
-                    intent = prompt.lower().replace(" ", "_")[:20]
-                    memoria[intent] = {"html": resposta_final, "features": ["enxame_nuvem"]}
-                    tmp = DB_PATH + ".tmp"
-                    with open(tmp, "w", encoding="utf-8") as f:
-                        json.dump(memoria, f, ensure_ascii=False, indent=2)
-                    os.replace(tmp, DB_PATH)
-                    print(f"[MEMORIA] Ouro salvo via Enxame.")
-                except Exception as e:
-                    print(f"[ERRO] Falha ao salvar: {e}")
-                
-                elapsed = round((time.perf_counter() - start_time) * 1000, 2)
-                self._send_json({"status": "success", "html": resposta_final, "fonte": fonte, "elapsed_ms": elapsed})
-                return
+        if self.path == "/api/recommend":
+            n = int(self.headers.get('Content-Length', 0))
+            body = json.loads(self.rfile.read(n).decode('utf-8'))
+            v1 = body.get("v1", []); v2 = body.get("v2", [])
+            sim = similaridade_cosseno(v1, v2)
+            self._send_json({"status": "success", "similaridade": sim, "fonte": "RECOMMENDATION_ENGINE"}); return
 
-            # --- NÍVEL 3: WEB LEARNER (GITHUB) ---
-            print("[WEB LEARNER] Enxame falhou. A procurar código real no GitHub...")
-            from intelligence.onnx_sovereign import extrair_chave
-            chave_limpa = extrair_chave(prompt)
-            print(f"[WEB LEARNER] A procurar no GitHub por: '{chave_limpa}'...")
-            
-            # G-131: Garantir que a funcao chamada e a nova
-            from intelligence.github_learner import aprender_do_github
-            codigo_web, proveniencia = aprender_do_github(chave_limpa)
-            
-            if codigo_web:
-                from intelligence.mutador_local_v1 import aplicar_mutacoes
-                codigo_web, _muts = aplicar_mutacoes(codigo_web, prompt)
-                if _muts:
-                    proveniencia = dict(proveniencia or {}); proveniencia['mutacoes'] = _muts
-                    print('[NIVEL 3.5 STILB] Mutado localmente: ' + ','.join(_muts))
-            if codigo_web:
-                # G-144 FIX: Usar a mesma chave que o ONNX vai procurar
-                intent_web = chave_limpa.replace(" ", "_")
-                
-                # --- NIVEL 0.5 STILB (MUTACAO NO WEB LEARNER) ---
-                try:
-                    codigo_web, _muts = aplicar_mutacoes(codigo_web, prompt)
-                    if _muts:
-                        print(f"[NIVEL 0.5 STILB] Mutacoes aplicadas no Web Learner: {_muts}")
-                except Exception as e:
-                    print(f"[AVISO] Erro no mutador STILB (Web): {e}")
-                # GATE-22 (i): Proveniência no gene
-                memoria[intent_web] = {
-                    "html": codigo_web, 
-                    "features": ["aprendido_web"], 
-                    "proveniencia": proveniencia
-                }
-                tmp = DB_PATH + ".tmp"
-                with open(tmp, "w", encoding="utf-8") as f:
-                    json.dump(memoria, f, ensure_ascii=False, indent=2)
-                os.replace(tmp, DB_PATH)
-                
-                elapsed = round((time.perf_counter() - start_time) * 1000, 2)
-                self._send_json({"status": "success", "html": codigo_web, "fonte": "WEB_LEARNER", "elapsed_ms": elapsed, "proveniencia": proveniencia})
-                return
+        self.send_response(404); self.end_headers()
 
-            # --- NÍVEL 4: AUTOPOIESE ---
-            print("[AUTOPOIESE] Tudo falhou. Criando esqueleto local...")
-            html_auto = gerar_esqueleto_local(prompt)
-            miolo_auto = ler_miolo(html_auto)
-            mutacoes_auto = inferir_mutacao(prompt, miolo_auto)
-            if mutacoes_auto:
-                html_auto = aplicar_mutacoes(html_auto, mutacoes_auto)
-            
-            intent_local = prompt.lower().replace(" ", "_")[:20]
-            memoria[intent_local] = {"html": html_auto, "features": ["autopoiese_evoluida"]}
-            tmp = DB_PATH + ".tmp"
-            with open(tmp, "w", encoding="utf-8") as f:
-                json.dump(memoria, f, ensure_ascii=False, indent=2)
-            os.replace(tmp, DB_PATH)
-            
-            elapsed = round((time.perf_counter() - start_time) * 1000, 2)
-            self._send_json({"status": "success", "html": html_auto, "fonte": "AUTOPOIESE_LOCAL", "elapsed_ms": elapsed})
-
-if __name__ == "__main__":
-    PORT = 8080
-    socketserver.TCPServer.allow_reuse_address = True
-    print(f"[LUMA_CORE] Servidor v83.0 (SOTA Clean) ativo em http://127.0.0.1:{PORT}")
-    try:
-        with socketserver.ThreadingTCPServer(("127.0.0.1", PORT), LumaCoreHandler) as httpd:
-            httpd.serve_forever()
-    except Exception as e:
-        print(f"[ERRO FATAL] {e}")
+socketserver.TCPServer.allow_reuse_address = True
+print(f"[V158 DASHBOARD] Servidor a arrancar em 127.0.0.1:{PORT}...")
+with socketserver.TCPServer(("127.0.0.1", PORT), Handler) as httpd:
+    httpd.serve_forever()

@@ -56,10 +56,11 @@ for i in range(19683):
         b[j] = temp % 3
         temp //= 3
     
-    # Apenas estados validos onde e a vez da IA (O)
+    # O ERRO ESTAVA AQUI: A IA JOGA COMO 'O', LOGO X DEVE TER 1 A MAIS.
     x_count = b.count(1)
     o_count = b.count(2)
-    if x_count != o_count: continue
+    if x_count != o_count + 1: continue
+    
     if check_win(b) != 0: continue
     if 0 not in b: continue
     
@@ -70,5 +71,5 @@ for i in range(19683):
 with open(LUT_PATH, "wb") as f:
     f.write(lut)
 
-print(f"[OK] Tabela LUT gerada: {valid_count} estados validos de {19683} totais.")
+print(f"[OK] Tabela LUT corrigida: {valid_count} estados validos.")
 print(f"[OK] Ficheiro binario: {LUT_PATH} ({len(lut)} bytes)")

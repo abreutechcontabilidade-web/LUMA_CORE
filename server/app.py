@@ -16,6 +16,8 @@ CHAVES = [
     ("jogo_da_velha", ("jogo da velha", "tic tac toe")),
     ("jogo_da_cobra", ("cobra", "snake")),
     ("pong", ("pong", "raquete")),
+    ("pong_ia", ("pong ia", "pong ai")),
+    ("snake_ia", ("snake ia", "cobra ia")),
     ("tetris", ("tetris",)),
     ("pacman", ("pacman",)),
     ("breakout", ("breakout", "tijolos", "tijolo")),
@@ -149,3 +151,4 @@ HOST = "0.0.0.0" if os.environ.get("RENDER") or os.environ.get("VERCEL") else "1
 print(f"[V168 CLOUD] Servidor a arrancar em {HOST}:{PORT}...")
 with socketserver.TCPServer((HOST, PORT), Handler) as httpd:
     httpd.serve_forever()
+

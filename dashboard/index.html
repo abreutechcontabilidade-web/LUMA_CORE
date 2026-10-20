@@ -1,0 +1,144 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"><title>LUMA_CORE // FRONTEND</title>
+<style>
+    body { background: #050510; color: #00ffe1; font-family: 'Courier New', monospace; padding: 30px; }
+    h1 { color: #ff2fd6; text-shadow: 0 0 20px #ff2fd6; text-align: center; }
+    h2 { color: #ff2fd6; border-bottom: 1px solid #ff2fd6; padding-bottom: 5px; }
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px; }
+    .panel { border: 2px solid #00ffe1; padding: 20px; background: #0a0a1a; box-shadow: 0 0 10px rgba(0,255,225,0.2); }
+    textarea, input { width: 100%; background: #050510; color: #00ffe1; border: 1px solid #00ffe1; padding: 10px; margin: 10px 0; font-family: monospace; box-sizing: border-box; }
+    button { background: #00ffe1; color: #000; border: none; padding: 10px 20px; font-weight: bold; cursor: pointer; }
+    button:hover { background: #ff2fd6; color: #fff; }
+    .result { margin-top: 15px; padding: 10px; border-left: 4px solid #ff2fd6; background: rgba(255,47,214,0.1); }
+    .arcade-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 15px; }
+    .card { border: 1px solid #00ffe1; padding: 15px; text-align: center; display: flex; flex-direction: column; justify-content: space-between; }
+    .card h2 { font-size: 16px; word-break: break-word; margin: 0 0 15px 0; border: none; }
+    .card a { color: #000; background: #00ffe1; padding: 8px 10px; text-decoration: none; font-weight: bold; display: inline-block; }
+</style>
+</head>
+<body>
+    <h1>LUMA_CORE DASHBOARD</h1>
+    
+    <div class="panel" style="margin-bottom: 20px; border-color: #ff2fd6;">
+        <h2 style="color: #ff2fd6; border-color: #ff2fd6;">AI Command Center</h2>
+        <div style="display: flex; gap: 10px;">
+            <input type="text" id="aiPrompt" placeholder="Ex: criar um jogo de corrida, ou analisar dna ATCG..." style="flex: 1; border-color: #ff2fd6;">
+            <button onclick="executarComando()" style="background: #ff2fd6; color: #fff;">EXECUTAR</button>
+        </div>
+        <div id="aiResult" class="result" style="border-color: #ff2fd6;">Aguardando comando...</div>
+    </div>
+
+    <div class="grid">
+        <div class="panel">
+            <h2>CPF Arbóreo // Análise Genética</h2>
+            <textarea id="dnaInput" rows="3" placeholder="Cole a sequência (ex: ATGCGATCGTAGCT..."></textarea>
+            <button onclick="analisarDNA()">Analisar Sequência</button>
+            <div id="dnaResult" class="result">Aguardando...</div>
+        </div>
+        <div class="panel">
+            <h2>Spotify Engine // Similaridade Cosseno</h2>
+            <input type="text" id="v1" placeholder="Vetor 1 (ex: 1, 2, 3)">
+            <input type="text" id="v2" placeholder="Vetor 2 (ex: 2, 3, 4)">
+            <button onclick="calcularSim()">Calcular Similaridade</button>
+            <div id="simResult" class="result">Aguardando...</div>
+        </div>
+    </div>
+
+    <h2 style="margin-top: 40px;">Arcade Local // Sintetizador</h2>
+    <div class="arcade-grid" id="arcadeGrid">
+        <p style="color:#888;">Carregando jogos da API...</p>
+    </div>
+
+<script>
+    const API_BASE_URL = "https://luma-core-pui3.onrender.com";
+
+    async function carregarJogos() {
+        const grid = document.getElementById('arcadeGrid');
+        // Lista estática de jogos conhecidos no Genoma
+        const jogos = ["Breakout", "Corrida", "Pong", "Pong IA", "Snake IA", "Metroid", "Pacman", "Memoria", "Rpg", "Space", "Tower", "Flappy", "Asteroids", "Forca"];
+        
+        grid.innerHTML = jogos.map(j => {
+            const safeName = j.toLowerCase().replace(/ /g, "_");
+            return `
+                <div class="card">
+                    <h2>${j}</h2>
+                    <a href="${API_BASE_URL}/artefacts/chave_${safeName}.html" target="_blank">JOGAR</a>
+                </div>
+            `;
+        }).join('');
+    }
+
+    async function executarComando() {
+        const prompt = document.getElementById('aiPrompt').value;
+        if (!prompt) return;
+        const resDiv = document.getElementById('aiResult');
+        resDiv.innerHTML = 'Processando...';
+        
+        try {
+            const res = await fetch(`${API_BASE_URL}/api/generate_cloud`, {
+                method: 'POST', headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({prompt: prompt})
+            });
+            const data = await res.json();
+            
+            if (data.status === 'success') {
+                if (data.fonte === 'DNA_ENGINE') {
+                    resDiv.innerHTML = `<b>Análise de DNA:</b> Tamanho: ${data.resultado.tamanho} bp | GC: ${data.resultado.gc_percent}%`;
+                } else if (data.fonte === 'SPOTIFY_ENGINE') {
+                    resDiv.innerHTML = `<b>Recomendação:</b> ${data.resultado}`;
+                } else if (data.html) {
+                    resDiv.innerHTML = `<b>Jogo Sintetizado!</b> <a href="#" onclick="abrirJogo('${encodeURIComponent(data.html)}')" style="color:#00ffe1;">CLIQUE PARA JOGAR</a>`;
+                }
+            } else {
+                resDiv.innerHTML = `<b style="color:red;">Erro:</b> ${data.msg || 'Falha no motor'}`;
+            }
+        } catch (e) {
+            resDiv.innerHTML = `<b style="color:red;">Erro de ligação à API.</b>`;
+        }
+    }
+
+    function abrirJogo(htmlEncoded) {
+        const html = decodeURIComponent(htmlEncoded);
+        const w = window.open();
+        w.document.write(html);
+        w.document.close();
+    }
+
+    async function analisarDNA() {
+        const seq = document.getElementById('dnaInput').value;
+        try {
+            const res = await fetch(`${API_BASE_URL}/api/dna`, {
+                method: 'POST', headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({sequencia: seq})
+            });
+            const data = await res.json();
+            if(data.status === 'success') {
+                document.getElementById('dnaResult').innerHTML = `
+                    <b>Tamanho:</b> ${data.resultado.tamanho} bp<br>
+                    <b>GC Content:</b> ${data.resultado.gc_percent}%<br>
+                    <b>AT Content:</b> ${data.resultado.at_percent}%`;
+            }
+        } catch(e) { document.getElementById('dnaResult').innerHTML = 'Erro de ligação.'; }
+    }
+
+    async function calcularSim() {
+        const v1 = document.getElementById('v1').value.split(',').map(Number);
+        const v2 = document.getElementById('v2').value.split(',').map(Number);
+        try {
+            const res = await fetch(`${API_BASE_URL}/api/recommend`, {
+                method: 'POST', headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({v1: v1, v2: v2})
+            });
+            const data = await res.json();
+            if(data.status === 'success') {
+                document.getElementById('simResult').innerHTML = `<b>Similaridade:</b> ${data.similaridade.toFixed(4)}`;
+            }
+        } catch(e) { document.getElementById('simResult').innerHTML = 'Erro de ligação.'; }
+    }
+
+    carregarJogos();
+</script>
+</body>
+</html>

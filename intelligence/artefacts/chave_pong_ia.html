@@ -1,10 +1,7 @@
-<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Jogo Sintetizado</title><style>body{background:#050510;color:#00ffe1;font-family:monospace;display:flex;justify-content:center;align-items:center;height:100vh;margin:0;}canvas{border:2px solid #00ffe1;box-shadow:0 0 20px #00ffe1;}</style></head>
-<body><canvas id="game" width="800" height="500"></canvas><script>
+<!DOCTYPE html><html><head><meta charset='UTF-8'><title>Jogo</title><style>body{background:#050510;color:#00ffe1;font-family:monospace;display:flex;justify-content:center;align-items:center;height:100vh;margin:0;}canvas{border:2px solid #00ffe1;box-shadow:0 0 20px #00ffe1;}</style></head><body><canvas id='game' width='800' height='500'></canvas><script>
 const canvas=document.getElementById('game');const ctx=canvas.getContext('2d');
-None
-None
-
-function draw(){None}
+let p1={x:20,y:210,w:15,h:80,score:0},p2={x:765,y:210,w:15,h:80,score:0},ball={x:400,y:250,dx:5,dy:5,r:8};const keys={};addEventListener('keydown',e=>keys[e.key]=true);addEventListener('keyup',e=>keys[e.key]=false);
+function draw(){ctx.fillStyle='#0a0a1a';ctx.fillRect(0,0,800,500);ctx.strokeStyle='#1a1a2e';ctx.setLineDash([10,10]);ctx.beginPath();ctx.moveTo(400,0);ctx.lineTo(400,500);ctx.stroke();ctx.setLineDash([]);if(keys['w']&&p1.y>0)p1.y-=7;if(keys['s']&&p1.y<420)p1.y+=7;let ty=ball.y-p2.h/2;if(p2.y<ty-10)p2.y+=5;else if(p2.y>ty+10)p2.y-=5;ball.x+=ball.dx;ball.y+=ball.dy;if(ball.y-ball.r<0||ball.y+ball.r>500)ball.dy*=-1;if(ball.x-ball.r<p1.x+p1.w&&ball.y>p1.y&&ball.y<p1.y+p1.h&&ball.dx<0){ball.dx=Math.abs(ball.dx);ball.x=p1.x+p1.w+ball.r;}if(ball.x+ball.r>p2.x&&ball.y>p2.y&&ball.y<p2.y+p2.h&&ball.dx>0){ball.dx=-Math.abs(ball.dx);ball.x=p2.x-ball.r;}if(ball.x>800){p1.score++;ball.x=400;ball.y=250;ball.dx=5;}if(ball.x<0){p2.score++;ball.x=400;ball.y=250;ball.dx=-5;}ctx.fillStyle='#00ffe1';ctx.shadowBlur=15;ctx.shadowColor='#00ffe1';ctx.fillRect(p1.x,p1.y,p1.w,p1.h);ctx.fillStyle='#ff2fd6';ctx.shadowColor='#ff2fd6';ctx.fillRect(p2.x,p2.y,p2.w,p2.h);ctx.fillStyle='#fff';ctx.shadowColor='#fff';ctx.beginPath();ctx.arc(ball.x,ball.y,ball.r,0,Math.PI*2);ctx.fill();ctx.shadowBlur=0;ctx.fillStyle='#00ffe1';ctx.font='40px monospace';ctx.fillText(p1.score,200,60);ctx.fillStyle='#ff2fd6';ctx.fillText(p2.score,600,60);}
 function update(t=0){draw();requestAnimationFrame(update);}
 update();
 </script></body></html>

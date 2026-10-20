@@ -61,7 +61,7 @@
             // Como a API não lista jogos diretamente, o frontend pode ter uma lista estática 
             // ou podemos assumir que o utilizador sabe os nomes.
             const grid = document.getElementById('arcadeGrid');
-            const jogos = ["Breakout", "Corrida", "Pong", "Metroid", "Pacman", "Memoria", "Rpg", "Space", "Tower"];
+            const jogos = ["Breakout", "Corrida", "Pong", "Pong IA", "Snake IA", "Metroid", "Pacman", "Memoria", "Rpg", "Space", "Tower", "Flappy", "Asteroids", "Forca"];
             
             grid.innerHTML = jogos.map(j => 
                 <div class="card">
@@ -116,3 +116,5 @@
 </script>
 </body>
 </html>
+
+

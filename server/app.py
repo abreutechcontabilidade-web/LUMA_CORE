@@ -1,4 +1,4 @@
-import http.server, socketserver, json, os, sys, re, time, shutil, difflib
+﻿import http.server, socketserver, json, os, sys, re, time, shutil, difflib
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 try:
@@ -59,94 +59,16 @@ class Handler(http.server.SimpleHTTPRequestHandler):
 
     def do_GET(self):
         if self.path == "/api/status":
-            self._send_json({"status": "LUMA_CORE v159 (Cloud Ready)", "services": ["games", "dna", "recommendation"]}); return
-        
-        if self.path == "/" or self.path == "/hub":
-            try: arquivos = [f for f in os.listdir(ARTEFACTOS_DIR) if f.startswith("chave_") and f.endswith(".html")]
-            except Exception: arquivos = []
-            
-            cards = ""
-            for f in arquivos:
-                nome_jogo = f.replace("chave_","").replace(".html","").replace("_"," ").title()
-                cards += f'<div class="card"><h2>{nome_jogo}</h2><a href="/artefacts/{f}" target="_blank">JOGAR</a></div>'
-            
-            hub = f"""<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-<meta charset="UTF-8"><title>LUMA_CORE // DASHBOARD</title>
-<style>
-    body {{ background: #050510; color: #00ffe1; font-family: 'Courier New', monospace; padding: 30px; }}
-    h1 {{ color: #ff2fd6; text-shadow: 0 0 20px #ff2fd6; text-align: center; }}
-    h2 {{ color: #ff2fd6; border-bottom: 1px solid #ff2fd6; padding-bottom: 5px; }}
-    .grid {{ display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px; }}
-    .panel {{ border: 2px solid #00ffe1; padding: 20px; background: #0a0a1a; box-shadow: 0 0 10px rgba(0,255,225,0.2); }}
-    textarea, input {{ width: 100%; background: #050510; color: #00ffe1; border: 1px solid #00ffe1; padding: 10px; margin: 10px 0; font-family: monospace; }}
-    button {{ background: #00ffe1; color: #000; border: none; padding: 10px 20px; font-weight: bold; cursor: pointer; }}
-    button:hover {{ background: #ff2fd6; color: #fff; }}
-    .result {{ margin-top: 15px; padding: 10px; border-left: 4px solid #ff2fd6; background: rgba(255,47,214,0.1); }}
-    .arcade-grid {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 15px; }}
-    .card {{ border: 1px solid #00ffe1; padding: 15px; text-align: center; display: flex; flex-direction: column; justify-content: space-between; }}
-    .card h2 {{ font-size: 16px; word-break: break-word; margin: 0 0 15px 0; }}
-    .card a {{ color: #000; background: #00ffe1; padding: 8px 10px; text-decoration: none; font-weight: bold; display: inline-block; }}
-</style>
-</head>
-<body>
-    <h1>LUMA_CORE UNIFIED DASHBOARD</h1>
-    
-    <div class="grid">
-        <div class="panel">
-            <h2>CPF Arbóreo // Análise Genética</h2>
-            <textarea id="dnaInput" rows="3" placeholder="Cole a sequência (ex: ATGCGATCGTAGCT..."></textarea>
-            <button onclick="analisarDNA()">Analisar Sequência</button>
-            <div id="dnaResult" class="result">Aguardando...</div>
-        </div>
-        <div class="panel">
-            <h2>Spotify Engine // Similaridade Cosseno</h2>
-            <input type="text" id="v1" placeholder="Vetor 1 (ex: 1, 2, 3)">
-            <input type="text" id="v2" placeholder="Vetor 2 (ex: 2, 3, 4)">
-            <button onclick="calcularSim()">Calcular Similaridade</button>
-            <div id="simResult" class="result">Aguardando...</div>
-        </div>
-    </div>
-
-    <h2 style="margin-top: 40px;">Arcade Local // Sintetizador</h2>
-    <div class="arcade-grid">
-        {cards}
-    </div>
-
-<script>
-    async function analisarDNA() {{
-        const seq = document.getElementById('dnaInput').value;
-        const res = await fetch('/api/dna', {{
-            method: 'POST', headers: {{'Content-Type': 'application/json'}},
-            body: JSON.stringify({{sequencia: seq}})
-        }});
-        const data = await res.json();
-        if(data.status === 'success') {{
-            document.getElementById('dnaResult').innerHTML = `
-                <b>Tamanho:</b> ${{data.resultado.tamanho}} bp<br>
-                <b>GC Content:</b> ${{data.resultado.gc_percent}}%<br>
-                <b>AT Content:</b> ${{data.resultado.at_percent}}%`;
-        }}
-    }}
-
-    async function calcularSim() {{
-        const v1 = document.getElementById('v1').value.split(',').map(Number);
-        const v2 = document.getElementById('v2').value.split(',').map(Number);
-        const res = await fetch('/api/recommend', {{
-            method: 'POST', headers: {{'Content-Type': 'application/json'}},
-            body: JSON.stringify({{v1: v1, v2: v2}})
-        }});
-        const data = await res.json();
-        if(data.status === 'success') {{
-            document.getElementById('simResult').innerHTML = `<b>Similaridade:</b> ${{data.similaridade.toFixed(4)}}`;
-        }}
-    }}
-</script>
-</body>
-</html>"""
-            self.send_response(200); self.send_header('Content-type', 'text/html; charset=utf-8'); self.end_headers(); self.wfile.write(hub.encode('utf-8')); return
+            self._send_json({"status": "LUMA_CORE v161 (Engine API)", "services": ["games", "dna", "recommendation"]}); return
+        # Deixa o servidor base lidar com os artefactos (jogos) e ficheiros estáticos
         super().do_GET()
+
+    def do_OPTIONS(self):
+        self.send_response(200)
+        self.send_header('Access-Control-Allow-Origin', '*')
+        self.send_header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS')
+        self.send_header('Access-Control-Allow-Headers', 'Content-Type')
+        self.end_headers()
 
     def do_POST(self):
         if self.path == "/api/generate_cloud":

@@ -93,6 +93,16 @@ class LumaCoreHandler(http.server.SimpleHTTPRequestHandler):
                 entry = memoria.get(intent_onnx, {})
                 html_atual = entry.get("html", "") if isinstance(entry, dict) else entry
                 
+                # --- STILB MUTATOR NO CACHE (NIVEL 1) ---
+                try:
+                    from intelligence.mutador_local_v1 import aplicar_mutacoes
+                    html_atual, _muts = aplicar_mutacoes(html_atual, prompt)
+                    if _muts:
+                        print(f"[NIVEL 1 STILB] Mutacoes aplicadas no cache: {_muts}")
+                except Exception as e:
+                    print(f"[AVISO] Erro no mutador STILB: {e}")
+                # ----------------------------------------
+                
                 miolo = ler_miolo(html_atual)
                 mutacoes = inferir_mutacao(prompt, miolo)
                 
@@ -151,8 +161,22 @@ class LumaCoreHandler(http.server.SimpleHTTPRequestHandler):
             codigo_web, proveniencia = aprender_do_github(chave_limpa)
             
             if codigo_web:
+                from intelligence.mutador_local_v1 import aplicar_mutacoes
+                codigo_web, _muts = aplicar_mutacoes(codigo_web, prompt)
+                if _muts:
+                    proveniencia = dict(proveniencia or {}); proveniencia['mutacoes'] = _muts
+                    print('[NIVEL 3.5 STILB] Mutado localmente: ' + ','.join(_muts))
+            if codigo_web:
                 # G-144 FIX: Usar a mesma chave que o ONNX vai procurar
                 intent_web = chave_limpa.replace(" ", "_")
+                
+                # --- NIVEL 0.5 STILB (MUTACAO NO WEB LEARNER) ---
+                try:
+                    codigo_web, _muts = aplicar_mutacoes(codigo_web, prompt)
+                    if _muts:
+                        print(f"[NIVEL 0.5 STILB] Mutacoes aplicadas no Web Learner: {_muts}")
+                except Exception as e:
+                    print(f"[AVISO] Erro no mutador STILB (Web): {e}")
                 # GATE-22 (i): Proveniência no gene
                 memoria[intent_web] = {
                     "html": codigo_web, 

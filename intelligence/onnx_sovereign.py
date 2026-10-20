@@ -1,26 +1,37 @@
 
-import difflib
-import re
+def extrair_chave(prompt):
+    p = prompt.lower()
+    if "cobr" in p or "snake" in p: return "jogo da cobra"
+    if "velha" in p or "tic" in p: return "jogo da velha"
+    if "calculadora" in p or "calculator" in p: return "calculadora"
+    if "cronometro" in p or "timer" in p: return "cronometro"
+    if "tarefa" in p or "todo" in p: return "lista de tarefas"
+    return " ".join(p.split()[:3])
 
 def buscar_no_genoma(prompt, memoria):
     if not memoria:
         return None, 0.0
         
-    melhor_chave = None
-    melhor_score = 0.0
+    chave_pedida = extrair_chave(prompt)
     
-    # O FIX REAL: [a-z0-9]+ quebra underscores e espacos, ignorando pontuacao
-    tokens_prompt = re.findall(r'[a-z0-9]+', prompt.lower())
-    p_clean = " ".join(tokens_prompt)
-
-    for chave, entry in memoria.items():
-        tokens_chave = re.findall(r'[a-z0-9]+', chave.lower())
-        k_clean = " ".join(tokens_chave)
+    # 1. Procura exata
+    if chave_pedida in memoria:
+        return chave_pedida, 1.0
+    if chave_pedida.replace(" ", "_") in memoria:
+        return chave_pedida.replace(" ", "_"), 1.0
         
-        score = difflib.SequenceMatcher(None, p_clean, k_clean).ratio()
-        
-        if score > melhor_score:
-            melhor_score = score
-            melhor_chave = chave
-
-    return melhor_chave, melhor_score
+    # 2. Procura por substring estrita (sem difflib)
+    if "cobra" in chave_pedida:
+        for k in memoria.keys():
+            if "cobra" in k.lower() or "snake" in k.lower():
+                return k, 1.0
+    if "velha" in chave_pedida:
+        for k in memoria.keys():
+            if "velha" in k.lower() or "tic" in k.lower():
+                return k, 1.0
+    if "calculadora" in chave_pedida:
+        for k in memoria.keys():
+            if "calculadora" in k.lower():
+                return k, 1.0
+                
+    return None, 0.0

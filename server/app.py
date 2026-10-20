@@ -142,18 +142,30 @@ class LumaCoreHandler(http.server.SimpleHTTPRequestHandler):
 
             # --- NÍVEL 3: WEB LEARNER (GITHUB) ---
             print("[WEB LEARNER] Enxame falhou. A procurar código real no GitHub...")
-            codigo_web = aprender_do_github(prompt)
+            from intelligence.onnx_sovereign import extrair_chave
+            chave_limpa = extrair_chave(prompt)
+            print(f"[WEB LEARNER] A procurar no GitHub por: '{chave_limpa}'...")
+            
+            # G-131: Garantir que a funcao chamada e a nova
+            from intelligence.github_learner import aprender_do_github
+            codigo_web, proveniencia = aprender_do_github(chave_limpa)
             
             if codigo_web:
-                intent_web = prompt.lower().replace(" ", "_")[:20]
-                memoria[intent_web] = {"html": codigo_web, "features": ["aprendido_web"]}
+                # G-144 FIX: Usar a mesma chave que o ONNX vai procurar
+                intent_web = chave_limpa.replace(" ", "_")
+                # GATE-22 (i): Proveniência no gene
+                memoria[intent_web] = {
+                    "html": codigo_web, 
+                    "features": ["aprendido_web"], 
+                    "proveniencia": proveniencia
+                }
                 tmp = DB_PATH + ".tmp"
                 with open(tmp, "w", encoding="utf-8") as f:
                     json.dump(memoria, f, ensure_ascii=False, indent=2)
                 os.replace(tmp, DB_PATH)
                 
                 elapsed = round((time.perf_counter() - start_time) * 1000, 2)
-                self._send_json({"status": "success", "html": codigo_web, "fonte": "WEB_LEARNER", "elapsed_ms": elapsed})
+                self._send_json({"status": "success", "html": codigo_web, "fonte": "WEB_LEARNER", "elapsed_ms": elapsed, "proveniencia": proveniencia})
                 return
 
             # --- NÍVEL 4: AUTOPOIESE ---

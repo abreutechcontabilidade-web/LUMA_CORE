@@ -20,3 +20,9 @@ boot_t59.txt
 _t*.json
 dynamic_tools.json.PERICIA_*
 github_token.txt
+_inject_key.py
+test_llm.py
+_update_vault.py
+_test_llm.py
+_fix_*.py
+_*.py

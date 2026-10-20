@@ -27,3 +27,4 @@ server_boot.*
 intelligence/artefacts/*.quarentena_*
 *token*.txt
 *.bak_segredo
+*.bak_sk_key

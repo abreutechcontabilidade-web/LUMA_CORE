@@ -1,0 +1,11 @@
+﻿services:
+  - type: web
+    name: luma-core-arcade
+    env: python
+    buildCommand: ""
+    startCommand: "python server/app.py"
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.0
+      - key: RENDER
+        value: "true"

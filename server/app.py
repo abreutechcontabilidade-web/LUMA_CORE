@@ -1,4 +1,4 @@
-import http.server, socketserver, json, os, sys, re, time, shutil, difflib
+﻿import http.server, socketserver, json, os, sys, re, time, shutil, difflib
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 try:
@@ -7,7 +7,7 @@ try:
 except ImportError as e:
     print(f"[BOOT ERROR] {e}"); sys.exit(1)
 
-PORT = 8080
+PORT = int(os.environ.get("PORT", 8080))
 ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 ARTEFACTOS_DIR = os.path.join(ROOT_DIR, "intelligence", "artefacts")
 
@@ -92,9 +92,9 @@ class Handler(http.server.SimpleHTTPRequestHandler):
     <div class="grid">
         <!-- DNA ENGINE -->
         <div class="panel">
-            <h2>CPF Arbóreo // Análise Genética</h2>
-            <textarea id="dnaInput" rows="3" placeholder="Cole a sequência (ex: ATGCGATCGTAGCT..."></textarea>
-            <button onclick="analisarDNA()">Analisar Sequência</button>
+            <h2>CPF ArbÃ³reo // AnÃ¡lise GenÃ©tica</h2>
+            <textarea id="dnaInput" rows="3" placeholder="Cole a sequÃªncia (ex: ATGCGATCGTAGCT..."></textarea>
+            <button onclick="analisarDNA()">Analisar SequÃªncia</button>
             <div id="dnaResult" class="result">Aguardando...</div>
         </div>
 
@@ -196,5 +196,6 @@ class Handler(http.server.SimpleHTTPRequestHandler):
 
 socketserver.TCPServer.allow_reuse_address = True
 print(f"[V158 DASHBOARD] Servidor a arrancar em 127.0.0.1:{PORT}...")
-with socketserver.TCPServer(("127.0.0.1", PORT), Handler) as httpd:
+HOST = "0.0.0.0" if os.environ.get("RENDER") or os.environ.get("VERCEL") else "127.0.0.1"
+with socketserver.TCPServer((HOST, PORT), Handler) as httpd:
     httpd.serve_forever()

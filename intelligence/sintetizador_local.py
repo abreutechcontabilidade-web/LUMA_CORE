@@ -25,6 +25,18 @@ def sintetizar_jogo(prompt):
         logica = f"{blocos.get('CANVAS')}\n{blocos.get('PHYS_SNAKE_IA')}\n{blocos.get('INPUT_SNAKE_IA')}\n"
         func = f"function draw(){{{blocos.get('DRAW_SNAKE_IA')}}}"
         html_canvas = '<canvas id="game" width="400" height="400"></canvas>'
+    elif "flappy" in p or "passaro" in p:
+        logica = f"{blocos.get('CANVAS')}\n{blocos.get('PHYS_FLAPPY')}\n{blocos.get('INPUT_FLAPPY')}\n"
+        func = f"function draw(){{{blocos.get('DRAW_FLAPPY')}}}"
+        html_canvas = '<canvas id="game" width="800" height="500"></canvas>'
+    elif "asteroids" in p or "asteroide" in p:
+        logica = f"{blocos.get('CANVAS')}\n{blocos.get('PHYS_ASTEROIDS')}\n{blocos.get('INPUT_ASTEROIDS')}\n"
+        func = f"function draw(){{{blocos.get('DRAW_ASTEROIDS')}}}"
+        html_canvas = '<canvas id="game" width="800" height="500"></canvas>'
+    elif "forca" in p or "hangman" in p:
+        logica = f"{blocos.get('CANVAS')}\n{blocos.get('PHYS_FORCA')}\n{blocos.get('INPUT_FORCA')}\n"
+        func = f"function draw(){{{blocos.get('DRAW_FORCA')}}}"
+        html_canvas = '<canvas id="game" width="800" height="500"></canvas>'
     else:
         # Jogo normal (sem IA) para manter a compatibilidade
         logica = f"{blocos.get('CANVAS')}\nlet p1={{x:10,y:200}},p2={{x:780,y:200}},ball={{x:400,y:250,dx:5,dy:5}};\n"
@@ -34,3 +46,4 @@ def sintetizar_jogo(prompt):
     html = f"""<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Jogo com IA</title>{blocos.get('STYLE')}</head>
 <body>{html_canvas}<script>\n{logica}\n{func}\n{blocos.get('LOOP')}\nupdate();\n</script></body></html>"""
     return html
+

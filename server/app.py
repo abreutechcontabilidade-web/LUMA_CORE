@@ -25,6 +25,9 @@ CHAVES = [
     ("memoria", ("memoria", "memory")),
     ("tower", ("tower", "defesa")),
     ("velha_ia", ("velha ia", "minimax")),
+    ("flappy", ("flappy", "passaro", "bird")),
+    ("asteroids", ("asteroids", "asteroide")),
+    ("forca", ("forca", "hangman")),
     ("calculadora", ("calculadora", "calculator")),
 ]
 

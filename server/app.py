@@ -3,7 +3,7 @@
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 try:
     from intelligence.sintetizador_local import sintetizar_jogo
-    from intelligence.advanced_ai import shannon_entropy, cusum_detect, cosine_similarity, obter_melhor_jogada_ia
+    from intelligence.micro_engine import shannon_entropy, cusum_detect, cosine_similarity, minimax_micro
     from intelligence.algoritmos_soberanos import obter_melhor_jogada_ia
     from intelligence.orquestrador import similaridade_cosseno, analisar_dna, classificar_intencao
 except ImportError as e:
@@ -145,7 +145,7 @@ class Handler(http.server.SimpleHTTPRequestHandler):
                 elif tipo == "cosine":
                     res = cosine_similarity(body.get("v1", []), body.get("v2", []))
                 elif tipo == "minimax":
-                    res = obter_melhor_jogada_ia(body.get("board", ['', '', '', '', '', '', '', '', '']))
+                    res = minimax_micro(body.get("board", [', ', ', ', ', ', ', ', ']))
                 else:
                     res = "Tipo desconhecido"
                 self._send_json({"status": "success", "resultado": res, "fonte": f"ADVANCED_AI_{tipo.upper()}"})
@@ -159,6 +159,7 @@ HOST = "0.0.0.0" if os.environ.get("RENDER") or os.environ.get("VERCEL") else "1
 print(f"[V159 CLOUD] Servidor a arrancar em {HOST}:{PORT}...")
 with socketserver.TCPServer((HOST, PORT), Handler) as httpd:
     httpd.serve_forever()
+
 
 
 

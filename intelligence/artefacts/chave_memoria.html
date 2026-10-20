@@ -1,12 +1,9 @@
-<!DOCTYPE html>
-<html><head><meta charset="UTF-8"><title>Jogo Sintetizado</title><style>body{background:#050510;color:#00ffe1;font-family:monospace;display:flex;justify-content:center;align-items:center;height:100vh;margin:0;}canvas{border:2px solid #00ffe1;box-shadow:0 0 20px #00ffe1;}</style></head>
-<body><canvas id="game" width="800" height="500"></canvas>
-<script>
+<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Jogo com IA</title><style>body{background:#050510;color:#00ffe1;font-family:monospace;display:flex;justify-content:center;align-items:center;height:100vh;margin:0;}canvas{border:2px solid #00ffe1;box-shadow:0 0 20px #00ffe1;}</style></head>
+<body><canvas id="game" width="800" height="500"></canvas><script>
 const canvas=document.getElementById('game');const ctx=canvas.getContext('2d');
-let cards=[];let flipped=[];let matched=0;for(let i=0;i<16;i++)cards.push({x:(i%4)*100+150,y:Math.floor(i/4)*100+50,val:i%8,isFlipped:false,isMatched:false});let clicks=0;
-canvas.addEventListener('click',e=>{let rect=canvas.getBoundingClientRect();let mx=e.clientX-rect.left,my=e.clientY-rect.top;cards.forEach(c=>{if(mx>c.x&&mx<c.x+80&&my>c.y&&my<c.y+80&&!c.isFlipped&&!c.isMatched&&flipped.length<2){c.isFlipped=true;flipped.push(c);if(flipped.length===2){setTimeout(()=>{if(flipped[0].val===flipped[1].val){flipped[0].isMatched=true;flipped[1].isMatched=true;matched+=2;}else{flipped[0].isFlipped=false;flipped[1].isFlipped=false;}flipped=[];},800);}}});});
+let p1={x:10,y:200},p2={x:780,y:200},ball={x:400,y:250,dx:5,dy:5};
 
-function draw(){ctx.fillStyle='#0a0a1a';ctx.fillRect(0,0,800,500);ctx.font='40px monospace';ctx.textAlign='center';cards.forEach(c=>{ctx.fillStyle=c.isMatched?'#333':(c.isFlipped?'#ff2fd6':'#00ffe1');ctx.fillRect(c.x,c.y,80,80);if(c.isFlipped||c.isMatched){ctx.fillStyle='#000';ctx.fillText(c.val,c.x+40,c.y+55);}});}
+function draw(){ctx.fillStyle='#0a0a1a';ctx.fillRect(0,0,800,500);ctx.fillStyle='#00ffe1';ctx.fillRect(p1.x,p1.y,10,80);ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(ball.x,ball.y,8,0,Math.PI*2);ctx.fill();}
 function update(t=0){draw();requestAnimationFrame(update);}
 update();
 </script></body></html>

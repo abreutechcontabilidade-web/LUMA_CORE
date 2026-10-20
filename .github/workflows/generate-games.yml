@@ -1,0 +1,26 @@
+name: Generate All Games
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Generate games
+        run: python scripts/generate_all_games.py
+      - name: Commit
+        run: |
+          git config user.name "GitHub Action"
+          git config user.email "action@github.com"
+          git add intelligence/artefacts/
+          git diff --staged --quiet || git commit -m "auto: regenerate games [skip ci]"
+          git push

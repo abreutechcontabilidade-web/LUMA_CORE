@@ -9,9 +9,8 @@ cors_headers = """        self.send_header('Access-Control-Allow-Origin', '*')
         self.send_header('Access-Control-Allow-Headers', 'Content-Type')
 """
 
-# 1. Injeta CORS no _send_json existente
+# 1. Injeta CORS no _send_json existente (preservando rotas)
 if "Access-Control-Allow-Origin" not in code:
-    # Tenta encontrar a assinatura exata do _send_json
     alvo = "        self.send_response(200)\n        self.send_header('Content-type', 'application/json; charset=utf-8')"
     if alvo in code:
         code = code.replace(alvo, alvo + "\n" + cors_headers)
@@ -20,7 +19,6 @@ if "Access-Control-Allow-Origin" not in code:
         if alvo2 in code:
             code = code.replace(alvo2, alvo2 + "\n" + cors_headers)
         else:
-            # Fallback mais permissivo
             code = code.replace("        self.send_response(200)\n        self.end_headers()", "        self.send_response(200)\n" + cors_headers + "        self.end_headers()")
 
 # 2. Injeta do_OPTIONS (preflight CORS)

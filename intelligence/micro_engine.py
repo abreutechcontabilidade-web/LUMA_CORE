@@ -1,4 +1,4 @@
-﻿import os, math, struct
+import os, math, struct
 
 LUT_PATH = os.path.join(os.path.dirname(__file__), "minimax_variants.bin")
 try:
@@ -49,3 +49,7 @@ def cosine_similarity(v1, v2):
     mag2 = math.sqrt(sum(b * b for b in v2))
     if mag1 == 0 or mag2 == 0: return 0.0
     return dot / (mag1 * mag2)
+
+
+def health_check():
+    return {'status': 'ok', 'engine': 'STILB'}

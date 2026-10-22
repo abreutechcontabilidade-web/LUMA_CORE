@@ -24,14 +24,13 @@ def minimax_micro(board, mode=0):
     return move if move != 255 else -1
 
 def shannon_entropy(data):
+    """Opcao 2: Usando collections.Counter e list comprehension."""
+    import math
+    from collections import Counter
     if not data: return 0.0
-    freq = {}
-    for item in data: freq[item] = freq.get(item, 0) + 1
-    entropy = 0.0; total = len(data)
-    for count in freq.values():
-        p = count / total
-        entropy -= p * math.log2(p)
-    return entropy
+    counts = Counter(data)
+    length = len(data)
+    return -sum((c/length) * math.log2(c/length) for c in counts.values())
 
 def cusum_detect(data, threshold=5.0, drift=0.5):
     if len(data) < 2: return False
